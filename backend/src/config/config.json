@@ -1,0 +1,7 @@
+//sequelize config file
+
+{
+  "config": "src/config/config.js",
+  "migrations-path": "src/db/migrations",
+  "database": "linkbuilder"
+}
