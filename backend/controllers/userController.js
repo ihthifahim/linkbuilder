@@ -28,7 +28,14 @@ async function login(req, res){
 
         const isValidPassword = await bcrypt.compare(password, user.password);
         const token = jwt.sign({userId: user.id}, secretKey, {expiresIn: '1h'});
-        res.json({token});
+        res.json({
+            token: token,
+            user: {
+                firstname: user.firstName,
+                lastname: user.lastName,
+                email: user.email
+            }
+        });
 
     } catch (error){
         console.error(error);
