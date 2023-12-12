@@ -1,7 +1,13 @@
 const {  DataTypes } = require('sequelize');
+const cuid = require('cuid');
 const sequelize = require('../../config/sequelize')
 
 const User = sequelize.define('users', {
+    id:{
+      type: DataTypes.STRING,
+      primaryKey: true,
+      defaultValue: () => cuid(),
+    },
     firstName: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -19,10 +25,14 @@ const User = sequelize.define('users', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    username:{
+    emailVerifiedAt: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    image: {
         type: DataTypes.STRING,
-        allowNull: false
-    }
+        allowNull: true
+    },
 
 });
 
