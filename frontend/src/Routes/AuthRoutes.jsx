@@ -6,6 +6,7 @@ import LazySpinner from "../Components/LazySpinner";
 // const Login = lazy(() => import("../Pages/Authentication/Login"));
 
 import Login from "../Pages/Authentication/Login"
+import Register from "../Pages/Authentication/Register";
 
 
 export default function AuthRoutes({setUser}){
@@ -13,6 +14,7 @@ export default function AuthRoutes({setUser}){
         // <Suspense fallback={ <LazySpinner />}>
             <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         // </Suspense>
     )

@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import UserContext from "./UserContext";
 
+
+import { jwtDecode } from "jwt-decode";
+
+
 const UserProvider = ({children}) => {
     const [user, setUser] = useState();
 
@@ -19,17 +23,29 @@ const UserProvider = ({children}) => {
     }
 
     const getUserData = () => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            login(parsedUser);
+        try{
+            const storedUser = localStorage.getItem('token');
+            if (storedUser) {
+                const decodedToken = jwtDecode(storedUser, '123');
+                const parsedUser = {
+                    userId: decodedToken.userId,
+                    firstname: decodedToken.firstName,
+                    lastname: decodedToken.lastName,
+                    email: decodedToken.email
+                }
+                login(parsedUser);
+            }
+        } catch (error) {
+
         }
+
+
     }
 
 
 
     return(
-        <UserContext.Provider value={{user, login, logout}}>
+        <UserContext.Provider value={{user, login, logout, getUserData}}>
             {children}
         </UserContext.Provider>
     )
