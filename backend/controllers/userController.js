@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../db/models/User');
+const UserSessions = require('../db/models/Sessions')
+const ErrorLog = require('../db/models/ErrorLog')
 const {secretKey} = require( "../config/config" );
 
 
@@ -8,11 +10,34 @@ async function signup(req, res) {
     try {
         const { firstname, lastname, email, password, username } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ firstName: firstname, lastName: lastname, email, password: hashedPassword, username: username });
-        res.status(201).json({ user });
+        const user = await User.create({ firstName: firstname, lastName: lastname, email, password: hashedPassword });
+
+        if(user){
+            const token = jwt.sign({
+                userId: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
+            }, secretKey, {expiresIn: '1h'});
+
+            const expireAt = new Date(Date.now() + 60 * 60 * 1000)
+            await UserSessions.create({
+                userId: user.id,
+                tokenType: 'access',
+                token,
+                expireAt
+            });
+
+            res.status(201).json({
+                token: token,
+            });
+        }
+
 
     } catch (error) {
-        console.error(error);
+        await ErrorLog.create({
+            errorMessage: error.message,
+        });
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -27,18 +52,33 @@ async function login(req, res){
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);
-        const token = jwt.sign({userId: user.id}, secretKey, {expiresIn: '1h'});
-        res.json({
-            token: token,
-            user: {
-                firstname: user.firstName,
-                lastname: user.lastName,
+
+        if(isValidPassword){
+            const token = jwt.sign({
+                userId: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email
-            }
-        });
+            }, secretKey, {expiresIn: '1h'});
+
+            const expireAt = new Date(Date.now() + 60 * 60 * 1000)
+            await UserSessions.create({
+                userId: user.id,
+                tokenType: 'access',
+                token,
+                expireAt
+            });
+
+            res.status(201).json({
+                token: token,
+            });
+        } else {
+            res.status(401).json({error: "Invalid Password"});
+        }
+
 
     } catch (error){
-        console.error(error);
+        res.status(500).json({error});
     }
 }
 

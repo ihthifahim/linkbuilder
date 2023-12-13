@@ -3,6 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv')
 const sequelize = require('./config/sequelize');
 
+
+
 dotenv.config();
 
 const app = express();
@@ -10,7 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 //Import Main Routes
 const mainRoutes = require('./routes/mainRoutes');
@@ -29,8 +30,8 @@ app.use('/api', mainRoutes);
 
 const port = process.env.PORT;
 sequelize.sync({ force: false }).then(() => {
+
     console.log('Database synced successfully');
-    // Start Express Server
     app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
     });
@@ -38,7 +39,10 @@ sequelize.sync({ force: false }).then(() => {
 
 
 
-// app.listen(port, () => {
-//     console.log(`Server is running on http://localhost:${port}`);
-//     console.log(process.env)
-// });
+// Links.sync()
+//     .then(() => {
+//         console.log('Links table synced successfully');
+//     })
+//     .catch((error) => {
+//         console.error('Error syncing Links table:', error);
+//     });

@@ -7,6 +7,7 @@ import AuthRoutes from "./Routes/AuthRoutes";
 import UserRoutes from "./Routes/UserRoutes";
 
 import UserProvider from "./Context/UserProvider";
+import Home from "./Pages/Home";
 
 
 
@@ -16,6 +17,10 @@ function App() {
 
   return (
       <>
+
+          <Routes>
+              <Route path="/" element={<Home/>} />
+          </Routes>
 
 
             <UserProvider>
