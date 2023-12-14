@@ -20,6 +20,10 @@ const Links = sequelize.define('links', {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
     },
+    domain: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     link_key: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -50,6 +54,10 @@ const Links = sequelize.define('links', {
     },
     utm_content: {
         type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    page_favicon: {
+        type: DataTypes.STRING,
         allowNull: true,
     },
     page_title: {

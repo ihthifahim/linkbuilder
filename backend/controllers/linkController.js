@@ -6,7 +6,7 @@ const Links = require('../db/models/Links');
 const User = require('../db/models/User');
 const ErrorLog = require( "../db/models/ErrorLog" );
 
-const {generateLinkKey} = require('../helpers/linkHelpers')
+const {generateLinkKey, findFavicon} = require('../helpers/linkHelpers')
 
 const { jwtDecode } = require('jwt-decode')
 
@@ -34,6 +34,7 @@ async function fetchLink(req, res){
                 title: $('title').text(),
                 description: $('meta[name="description"]').attr('content') || '',
                 image: $('meta[property="og:image"]').attr('content') || '',
+                favicon: findFavicon($, url),
             };
             res.json(metaTags);
         }
@@ -57,7 +58,7 @@ async function linkKey(req, res){
 async function saveLink(req, res){
 
     try{
-        const {link_key, destinationURL, utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content, page_title,
+        const {link_key, destinationURL, utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content,page_favicon, page_title,
             page_description, page_image, token
         } = req.body;
 
@@ -74,6 +75,7 @@ async function saveLink(req, res){
                 utm_id,
                 utm_term,
                 utm_content,
+                page_favicon,
                 page_title,
                 page_description,
                 page_image
@@ -91,12 +93,28 @@ async function saveLink(req, res){
         });
         res.status(500).json({ error: 'Internal Server Error' });
     }
+}
 
 
 
+async function getAllLinks(req, res){
+    try{
+
+        const links = await Links.findAll({
+            where: {userId: req.user.userId},
+            order: [['createdAt', 'DESC']]
+        })
+        res.status(200).json(links);
+
+    } catch(error){
+        await ErrorLog.create({
+            errorMessage: error.message,
+        });
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 
 
 
-module.exports = {fetchLink, linkKey, saveLink}
+module.exports = {fetchLink, linkKey, saveLink, getAllLinks}

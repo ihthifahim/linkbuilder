@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState, useRef} from "react";
 import UserContext from "../Context/UserContext";
 import {Link, useLocation} from "react-router-dom";
 
@@ -6,41 +6,56 @@ import {Link, useLocation} from "react-router-dom";
 
 
 export default function Header(){
-    const {user, logout} = useContext(UserContext)
+    const { user, logout } = useContext(UserContext);
     const location = useLocation();
-
     const [isProfileMenuVisible, setProfileMenuVisibility] = useState(false);
 
     const showProfileMenu = () => {
         setProfileMenuVisibility(!isProfileMenuVisible);
     };
 
+    const closeProfileMenu = () => {
+        setProfileMenuVisibility(false);
+    };
+
+    const profileMenuRef = useRef();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+                closeProfileMenu();
+            }
+        };
+        document.addEventListener("click", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, []);
 
     const firstName = user ? user.firstname : '';
 
     return(
         <>
-
-            <div className="flex justify-between container mx-auto py-5 mb-5">
-                <div className="">
-                    Hi {firstName}
-                </div>
+            <div className="flex justify-between container mx-auto py-5 mb-5 px-5">
+                <div className="">Hi {firstName}</div>
                 <div className="flex">
-                    <div className="">
-
-                    </div>
-
-
-                    <div className="relative">
+                    <div className=""></div>
+                    <div className="relative" ref={profileMenuRef}>
                         <div className="inline-flex items-center overflow-hidden bg-white">
                             <button onClick={showProfileMenu}>
                                 <img alt="profile Image" src="/assets/images/profileimg.jpg" className="w-10 rounded-full" />
                             </button>
                         </div>
-
-                        <div id="profileMenu" className={`${ isProfileMenuVisible ? 'absolute' : 'hidden'} end-0 z-10 mt-2 w-56 rounded-md border border-gray-100 bg-white shadow-lg`} role="menu">
+                        <div
+                            id="profileMenu"
+                            className={`${
+                                isProfileMenuVisible ? 'absolute' : 'hidden'
+                            } end-0 z-10 mt-2 w-56 rounded-md border border-gray-100 bg-white shadow-lg`}
+                            role="menu"
+                        >
                             <div className="p-2">
-                                <a href="#" className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700" role="menuitem">
+                                <a href="#"  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"  role="menuitem">
                                     Settings
                                 </a>
                                 <a href="#" onClick={logout} className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700" role="menuitem">
@@ -49,11 +64,9 @@ export default function Header(){
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-            <div className="border-b border-gray-200">
+            <div className="border-b border-gray-200 px-5">
                 <div className="container mx-auto">
                     <div className="sm:hidden">
                         <label className="sr-only">Tab</label>

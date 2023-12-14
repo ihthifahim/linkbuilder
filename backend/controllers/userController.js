@@ -18,9 +18,9 @@ async function signup(req, res) {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email
-            }, secretKey, {expiresIn: '1h'});
+            }, secretKey, {expiresIn: '5d'});
 
-            const expireAt = new Date(Date.now() + 60 * 60 * 1000)
+            const expireAt = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
             await UserSessions.create({
                 userId: user.id,
                 tokenType: 'access',
@@ -59,9 +59,9 @@ async function login(req, res){
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email
-            }, secretKey, {expiresIn: '1h'});
+            }, secretKey, {expiresIn: '5d'});
 
-            const expireAt = new Date(Date.now() + 60 * 60 * 1000)
+            const expireAt = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
             await UserSessions.create({
                 userId: user.id,
                 tokenType: 'access',
