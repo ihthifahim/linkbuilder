@@ -1,14 +1,17 @@
 import React, {useState, useEffect, useContext} from 'react';
 import axiosInstance from "../../utils/axiosConfig";
 import LazySpinner from "../../Components/LazySpinner";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import UserContext from "../../Context/UserContext";
 import PageTitle from "../../PageTitle";
+import SessionTimedOut from "../../Components/Alerts/SessionTimedOut";
 
 
 
 export default function Login() {
+    const location = useLocation();
+    const sessionStatus = new URLSearchParams(location.search).get('session');
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loginError, setLoginError] = useState("");
@@ -16,6 +19,8 @@ export default function Login() {
     const navigate = useNavigate();
     const { login, getUserData } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false)
+
+
 
 
     const handleSubmit = async (e) => {
@@ -55,6 +60,7 @@ export default function Login() {
     return (
         <>
             <PageTitle title="Login" />
+            {sessionStatus === 'timedout' && <SessionTimedOut />}
 
 
             <div className="flex justify-center items-center min-h-screen bg-gray-100"

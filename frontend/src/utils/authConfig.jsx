@@ -10,13 +10,19 @@ export default function PrivateRoute({ children }) {
 
 
 
-
     if (!authToken) {
         return <Navigate to="/login" />;
     }
 
     try {
+        const decodedToken = jwtDecode(authToken);
+        if (decodedToken.exp * 1000 < Date.now()) {
+            console.log('Token expired. Logging out...');
+            localStorage.removeItem('token');
+            return <Navigate to="/login" />;
+        }
         return children;
+
     } catch (error) {
         console.error('Error decoding token:', error);
         return <Navigate to="/login" />;
