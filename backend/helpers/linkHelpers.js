@@ -12,6 +12,7 @@ function generateLinkKey(){
     return randomId;
 }
 
+
 function findFavicon($, url) {
     const possibleFaviconPaths = [
         '/favicon.ico', // Default favicon path
@@ -27,7 +28,7 @@ function findFavicon($, url) {
     }
 
     // If none of the common paths are found, try to extract it from the HTML
-    const faviconElement = $('link[rel="icon"], link[rel="shortcut icon"]').first();
+    const faviconElement = $('link[rel="icon"], link[rel="icon shortcut"] ,link[rel="shortcut icon"]').first();
     const faviconUrl = faviconElement.attr('href');
     if (faviconUrl) {
         return new URL(faviconUrl, url).href;
@@ -36,8 +37,5 @@ function findFavicon($, url) {
     return null; // Favicon not found
 }
 
-function findDuplicateKey(){
-
-}
 
 module.exports = {generateLinkKey, findFavicon}
