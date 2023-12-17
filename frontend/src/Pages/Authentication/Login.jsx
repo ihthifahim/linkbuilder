@@ -46,7 +46,7 @@ export default function Login() {
 
         } catch (error) {
             setIsLoading( false );
-
+            console.log(error)
             if (error.response) {
                 console.log( error.response.data );
                 if (error.response.data.error === "Invalid Email") {
@@ -63,9 +63,13 @@ export default function Login() {
             {sessionStatus === 'timedout' && <SessionTimedOut />}
 
 
+
+
             <div className="flex justify-center items-center min-h-screen bg-gray-100"
-            style={{ backgroundImage: 'url(assets/images/bg.webp)', backgroundSize: 'cover'}}>
-                <div className="flex flex-1 flex-col  justify-center space-y-5 max-w-md bg-white rounded-2xl px-10 py-20 shadow-xl">
+            style={{ backgroundImage: 'url(assets/images/bglogo.png)', backgroundSize: 'cover'}}>
+
+                <div className="flex flex-1 flex-col  justify-center space-y-5 max-w-md bg-white rounded-2xl px-10 py-10 shadow-xl">
+                    <div className="flex justify-center"><img src="/assets/images/logonew.png" className="w-20" /></div>
 
                     {loginError && (
                         <div className="py-3 text-center bg-red-500 text-white rounded-lg text-sm">
@@ -74,8 +78,9 @@ export default function Login() {
                     )}
 
 
+
                     <div className="flex flex-col space-y-2 text-center">
-                        <h2 className="text-3xl md:text-3xl font-bold mb-5">Sign in to your account</h2>
+                        <h2 className="text-2xl md:text-xl font-bold mt-5">Hey welcome back! 👋</h2>
                     </div>
                     <form onSubmit={ handleSubmit }>
                         <div className="flex flex-col max-w-md space-y-5">

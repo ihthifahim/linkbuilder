@@ -3,9 +3,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 module.exports = {
-    secretKey: '123',
+    secretKey: process.env.SECRET_KEY,
     database: {
-        name: "linkbuilder",
+        name: process.env.DB_NAME,
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         host: process.env.DB_HOST,

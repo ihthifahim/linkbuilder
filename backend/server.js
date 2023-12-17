@@ -3,7 +3,9 @@ const cors = require('cors');
 const dotenv = require('dotenv')
 const sequelize = require('./config/sequelize');
 
+const router = express.Router();
 
+const LinkTraffic = require('./db/models/LinkTraffic')
 
 dotenv.config();
 
@@ -15,15 +17,15 @@ app.use(express.urlencoded({ extended: true }));
 
 //Import Main Routes
 const mainRoutes = require('./routes/mainRoutes');
+const mainLinkRoutes = require('./routes/mainLinkRoute');
 
 
 app.get('/', (req, res) => {
-    res.json({
-        "hello": "world"
-    })
+    res.redirect('https://gumly.co');
 })
 
 //All Routes
+app.use('/', mainLinkRoutes)
 app.use('/api', mainRoutes);
 
 
@@ -38,8 +40,7 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 
-
-// Links.sync()
+// LinkTraffic.sync()
 //     .then(() => {
 //         console.log('Links table synced successfully');
 //     })

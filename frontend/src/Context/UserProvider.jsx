@@ -36,7 +36,7 @@ const UserProvider = ({children}) => {
                 login(parsedUser);
             }
         } catch (error) {
-
+            console.log("This is the error")
         }
 
 

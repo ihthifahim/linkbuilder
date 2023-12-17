@@ -7,13 +7,13 @@ export default function DefaultLayout(){
 
     return(
         <>
-            <div className="h-screen text-gray-700">
-                <div className="sticky top-0 bg-white">
+            <div className="h-screen text-gray-700 ">
+                <div className="sticky top-0 bg-white px-5 md:px-5 lg:px-5 xl:px-1">
                     <Header/>
                 </div>
 
-                <div className="bg-gray-100 min-h-screen">
-                    <div className="container mx-auto py-5 px-5">
+                <div className="bg-gray-100 min-h-screen px-5 md:px-5 lg:px-5 xl:px-1">
+                    <div className="container mx-auto py-5">
                         <Outlet/>
                     </div>
                 </div>

@@ -37,15 +37,18 @@ export default function Header(){
 
     return(
         <>
-            <div className="flex justify-between container mx-auto py-5 mb-5 px-5">
-                <div className="">Hi {firstName}</div>
+            <div className="flex justify-between container mx-auto py-5 mb-5">
+                <div className="">
+                    <img src="/assets/images/logonew.png" className="w-20" />
+                </div>
                 <div className="flex">
                     <div className=""></div>
                     <div className="relative" ref={profileMenuRef}>
                         <div className="inline-flex items-center overflow-hidden bg-white">
-                            <button onClick={showProfileMenu}>
-                                <img alt="profile Image" src="/assets/images/profileimg.jpg" className="w-10 rounded-full" />
-                            </button>
+                            <div className="mr-3 hover:cursor-pointer" onClick={showProfileMenu}>Hi {firstName}</div>
+                            {/*<button onClick={showProfileMenu}>*/}
+                            {/*    <img alt="profile Image" src="/assets/images/profileimg.jpg" className="w-10 rounded-full" />*/}
+                            {/*</button>*/}
                         </div>
                         <div
                             id="profileMenu"
@@ -55,7 +58,7 @@ export default function Header(){
                             role="menu"
                         >
                             <div className="p-2">
-                                <a href="#"  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"  role="menuitem">
+                                <a href="/manage/profile/settings"  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"  role="menuitem">
                                     Settings
                                 </a>
                                 <a href="#" onClick={logout} className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700" role="menuitem">
@@ -68,17 +71,14 @@ export default function Header(){
             </div>
             <div className="border-b border-gray-200 px-5">
                 <div className="container mx-auto">
-                    <div className="sm:hidden">
-                        <label className="sr-only">Tab</label>
-                        <select id="Tab" className="w-full rounded-md border-gray-200">
-                            <option>Settings</option>
-                            <option>Messages</option>
-                            <option>Archive</option>
-                            <option>Notifications</option>
-                        </select>
-                    </div>
+                    {/*<div className="sm:hidden">*/}
+                    {/*    <label className="sr-only">Tab</label>*/}
+                    {/*    <select id="Tab" className="w-full rounded-md border-gray-200">*/}
+                    {/*        /!*<option>Settings</option>*!/*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
 
-                    <div className="hidden sm:block">
+                    <div className="">
                         <div className="">
                             <nav className="-mb-px flex gap-6" aria-label="Tabs">
                                 <Link to="/manage/dashboard" className={`shrink-0 px-1 pb-4 text-sm font-medium hover:text-sky-600 ${location.pathname === '/manage/dashboard' ? 'border-b-2 text-sky-600 border-sky-500' : 'text-gray-500'} `}>
@@ -88,9 +88,6 @@ export default function Header(){
                                 <Link to="/manage/links" className={`shrink-0 px-1 pb-4 text-sm font-medium hover:text-sky-600 ${location.pathname === '/manage/links' ? 'border-b-2 text-sky-600 border-sky-500' : 'text-gray-500'} `} aria-current="page">
                                     Links
                                 </Link>
-                                <a href="#" className="shrink-0 border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" aria-current="page">
-                                    Settings
-                                </a>
                             </nav>
                         </div>
                     </div>
