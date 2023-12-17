@@ -23,10 +23,7 @@ export default function Links(){
     const getAllLinks = async () => {
         try{
             const response = await axiosInstance.get('link/get-all-links');
-            console.log(response.data)
             setLinkList(response.data)
-
-
         } catch (error){
             console.log({error})
         }
@@ -44,7 +41,7 @@ export default function Links(){
         setTimeout(() => {
             setShowSuccessAlert(false);
         }, 2000);
-        console.log("saved")
+
     }
     return(
         <>
@@ -55,16 +52,14 @@ export default function Links(){
                 <button className="bg-black text-white text-sm px-3 rounded-md" onClick={createLinkModal}>Create Link</button>
             </div>
 
-            <div className="grid grid-cols-4 gap-6 py-10">
-                <div className="bg-white shadow-sm rounded-lg px-5 py-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 py-10">
+                <div className="col-span-2 scrollbar-hide px-5 py-5 sticky top-40 hidden max-h-[calc(100vh-150px)] self-start overflow-auto rounded-lg border border-gray-100 bg-white shadow lg:block">
                     <h2 className="font-bold">Filter links</h2>
                 </div>
-                <div className="col-span-2">
-
+                <div className="auto-rows-min grid-cols-1 lg:col-span-6">
                     {linkList.map((link) => (
                         <LinkCard key={link.id} link={link} />
                     ))}
-
                 </div>
             </div>
 

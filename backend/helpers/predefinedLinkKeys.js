@@ -4,6 +4,7 @@ const predefinedLinkKeys = [
     'incarnage',
     'carnage',
     'ihthishaam',
+    'gumly',
     'gum',
     'gum.lk',
     'gumlk',

@@ -6,6 +6,8 @@ const ErrorLog = require('../db/models/ErrorLog')
 const {secretKey} = require( "../config/config" );
 
 
+
+
 async function signup(req, res) {
     try {
         const { firstname, lastname, email, password, username } = req.body;
@@ -82,4 +84,49 @@ async function login(req, res){
     }
 }
 
-module.exports = {signup, login};
+async function getUser(req, res){
+    try{
+        const userSession = req.user;
+        const user = await User.findOne({where: {id: userSession.userId}});
+        res.status(200).json({
+            user
+        });
+    } catch (error){
+        res.status(500).json({
+            error: error
+        })
+    }
+}
+
+async function updateUser(req, res){
+
+    try{
+        const userSession = req.user;
+        const {firstname, lastname, email} = req.body;
+        const user = await User.update(
+            {
+                firstName: firstname,
+                lastName: lastname,
+                email: email
+            },{
+            where: {id: userSession.userId}
+            }
+            );
+
+        if(user){
+            const token = jwt.sign({
+                userId: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
+            }, secretKey, {expiresIn: '5d'});
+            res.status(200).json({message: "updated", token})
+        }
+
+    } catch(error){
+        res.status(500).json({error: error})
+    }
+}
+
+
+module.exports = {signup, login, getUser, updateUser};

@@ -12,6 +12,8 @@ router.post('/save', authMiddleware , LinkController.saveLink);
 router.get('/get-link-key' , LinkController.linkKey);
 router.get('/get-all-links' ,authMiddleware, LinkController.getAllLinks);
 
+router.get('/get-link', authMiddleware, LinkController.getLink);
+
 
 
 module.exports = router;

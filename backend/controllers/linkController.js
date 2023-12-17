@@ -79,6 +79,7 @@ async function saveLink(req, res){
         if(linkExists){
             res.status(200).json({message: "key exists"});
         } else {
+            const domain = "gum.lk";
             const decodedToken = jwtDecode(token, '123');
             const user = await User.findOne({where: { id: decodedToken.userId}});
             if(user){
@@ -86,6 +87,7 @@ async function saveLink(req, res){
                     link_key,
                     userId: user.id,
                     destinationURL,
+                    domain,
                     utm_source,
                     utm_medium,
                     utm_campaign,
@@ -119,13 +121,27 @@ async function saveLink(req, res){
 
 async function getAllLinks(req, res){
     try{
-
         const links = await Links.findAll({
             where: {userId: req.user.userId},
             order: [['createdAt', 'DESC']]
         })
         res.status(200).json(links);
+    } catch(error){
+        await ErrorLog.create({
+            errorMessage: error.message,
+        });
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 
+
+async function getLink(req, res){
+    try{
+
+        const link = await Links.findOne({
+            where: {link_key: req.query.key}
+        })
+        res.status(200).json(link);
     } catch(error){
         await ErrorLog.create({
             errorMessage: error.message,
@@ -136,5 +152,4 @@ async function getAllLinks(req, res){
 
 
 
-
-module.exports = {fetchLink, linkKey, saveLink, getAllLinks}
+module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink}

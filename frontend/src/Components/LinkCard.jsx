@@ -1,5 +1,6 @@
 import React, {useRef, useState, useEffect} from "react";
 import LinkCopied from "./Alerts/LinkCopied";
+import {Link} from "react-router-dom";
 
 export default function LinkCard({link}){
     const linkRef = useRef();
@@ -72,7 +73,8 @@ export default function LinkCard({link}){
 
     return(
         <>
-            <div className="bg-white shadow-sm rounded-lg py-5 px-5 flex items-center hover:shadow-lg  mb-5">
+            <Link to={`/manage/links/${link.link_key}`}>
+            <div className="bg-white shadow-sm rounded-lg py-5 px-5 flex items-center hover:shadow-lg mb-5">
                 <div className="">
                     <img alt="profile Image" src={link.page_favicon} className="w-16 rounded-full" />
                 </div>
@@ -90,6 +92,7 @@ export default function LinkCard({link}){
                     </div>
                 </div>
             </div>
+            </Link>
 
             {isCopied && <LinkCopied />}
 
