@@ -6,9 +6,13 @@ const geoip = require('geoip-lite');
 
 function getLinkHeaders(req, res, next){
 
-    if (req.url === '/favicon.ico') {
+
+    const skipUrls = ['/favicon.ico', '/.git', '/docker-compose.yml', '/.env'];
+
+    if (skipUrls.includes(req.url)) {
         return next();
     }
+      
 
     const linkKey = req.params;
 
