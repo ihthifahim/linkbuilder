@@ -10,14 +10,23 @@ async function redirection(req, res){
     })
 
     if(link){
-        console.log("started link")
+        const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_term', 'utm_content'];
+        let appendedURL = link.destinationURL;
+
+        utmParams.forEach(param => {
+            if (link[param]) {
+                appendedURL += (appendedURL.includes('?') ? '&' : '?') + `${param}=${encodeURIComponent(link[param])}`;
+            }
+        });
+
         link.total_clicks += 1;
         link.last_click_date = new Date();
 
         await link.save();
-        console.log("saved link")
-
-        return res.redirect(link.destinationURL);
+        
+        return res.redirect(appendedURL);
+        
+        // return res.redirect(link.destinationURL);
     } else {
         return res.status(404).send('Link not found');
     }

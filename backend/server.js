@@ -10,7 +10,7 @@ const LinkTraffic = require('./db/models/LinkTraffic')
 dotenv.config();
 
 const app = express();
-
+app.use(require('express-status-monitor')())
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,20 +19,21 @@ app.use(express.urlencoded({ extended: true }));
 const mainRoutes = require('./routes/mainRoutes');
 const mainLinkRoutes = require('./routes/mainLinkRoute');
 
+app.use('/', mainLinkRoutes)
 
 app.get('/', (req, res) => {
     res.redirect('https://gumly.co');
+    
 })
 
 //All Routes
-app.use('/', mainLinkRoutes)
+
 app.use('/api', mainRoutes);
 
 
 
 const port = process.env.PORT;
 sequelize.sync({ force: false }).then(() => {
-
     console.log('Database synced successfully');
     app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
