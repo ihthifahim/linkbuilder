@@ -33,7 +33,7 @@ function getLinkHeaders(req, res, next){
     try{
         linkTraffic.create({
             linkKey: linkKey.linkkey,
-            location_country: req.linkDetails.location,
+            location_country: req.linkDetails.country,
             location_city: req.linkDetails.city,
             device_device: req.linkDetails.device,
             device_browser: req.linkDetails.browser,
