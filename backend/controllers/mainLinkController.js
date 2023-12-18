@@ -10,9 +10,12 @@ async function redirection(req, res){
     })
 
     if(link){
+        console.log("started link")
         link.total_clicks += 1;
         link.last_click_date = new Date();
+
         await link.save();
+        console.log("saved link")
 
         return res.redirect(link.destinationURL);
     } else {
