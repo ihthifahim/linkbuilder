@@ -48,9 +48,10 @@ export default function Login() {
             setIsLoading( false );
             console.log(error)
             if (error.response) {
-                console.log( error.response.data );
                 if (error.response.data.error === "Invalid Email") {
                     setLoginError( "We could not find an account with your email" );
+                } else if(error.response.data.error === "Invalid Password"){
+                    setLoginError( "You entered a wrong password" );
                 }
             }
 
