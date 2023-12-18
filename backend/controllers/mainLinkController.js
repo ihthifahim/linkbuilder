@@ -25,7 +25,6 @@ async function redirection(req, res){
         await link.save();
         
         return res.redirect(appendedURL);
-        
         // return res.redirect(link.destinationURL);
     } else {
         return res.status(404).send('Link not found');

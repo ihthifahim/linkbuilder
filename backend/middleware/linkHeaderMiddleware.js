@@ -23,10 +23,6 @@ async function getLinkHeaders(req, res, next){
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const geo = geoip.lookup(ip);
 
-    console.log({
-        "ip": ip,
-        "line": "Line 1"
-    });
 
     const referrer = req.headers.referer || req.headers.referrer || '';
 
@@ -40,16 +36,9 @@ async function getLinkHeaders(req, res, next){
         referrer: referrer,
     };
 
-    console.log({
-        "ip": ip,
-        "line": "Line 2"
-    });
 
     try{
-        console.log({
-            "ip": ip,
-            "line": "Line 3"
-        });
+
         const lastHour = new Date(new Date() - 60 * 60 * 1000);
         const existingRecord = await linkTraffic.findOne({
             where: {
@@ -59,15 +48,7 @@ async function getLinkHeaders(req, res, next){
             },
         });
 
-        console.log({
-            "ip": ip,
-            "line": "Line 4"
-        });
         if (!existingRecord) {
-            console.log({
-                "ip": ip,
-                "line": "Line 5"
-            });
             await linkTraffic.create({
                 linkKey: linkKey.linkkey,
                 location_country: req.linkDetails.country,
@@ -81,10 +62,7 @@ async function getLinkHeaders(req, res, next){
         }
 
     } catch (error) {
-        console.log({
-            "ip": ip,
-            "line": "Line 6"
-        });
+
          await ErrorLog.create({
             errorMessage: error.message,
         });

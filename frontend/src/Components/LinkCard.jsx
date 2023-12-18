@@ -18,6 +18,7 @@ export default function LinkCard({link}){
 
     const handleCopyToClipboard = () => {
         const linkText = linkRef.current.textContent;
+        console.log(linkText)
 
         const tempInput = document.createElement('input');
         tempInput.value = linkText;
