@@ -10,7 +10,6 @@ const LinkTraffic = require('./db/models/LinkTraffic')
 dotenv.config();
 
 const app = express();
-app.use(require('express-status-monitor')())
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +22,6 @@ app.use('/', mainLinkRoutes)
 
 app.get('/', (req, res) => {
     res.redirect('https://gumly.co');
-    
 })
 
 //All Routes

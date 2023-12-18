@@ -56,7 +56,6 @@ async function getLinkHeaders(req, res, next){
         }
 
     } catch (error) {
-
          await ErrorLog.create({
             errorMessage: error.message,
         });
