@@ -2,7 +2,6 @@
 
 const predefinedLinkKeys = [
     'incarnage',
-    'carnage',
     'ihthishaam',
     'gumly',
     'gum',

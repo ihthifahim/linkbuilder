@@ -7,7 +7,7 @@ const sequelize = new Sequelize(database.name, database.username, database.passw
     host: database.host,
     port: database.port,
     dialect: database.dialect,
-    logging: true,
+    logging: false,
     database: database.name,
 });
 
