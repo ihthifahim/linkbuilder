@@ -7,7 +7,7 @@ const mainLinkController = require("../controllers/mainLinkController")
 
 
 
-router.get('/:linkkey', linkHeaderMiddleware ,mainLinkController.redirection);
+router.get('/:linkkey', linkHeaderMiddleware , mainLinkController.redirection);
 
 
 
