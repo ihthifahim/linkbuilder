@@ -8,9 +8,7 @@ const useragent = require('express-useragent');
 const geoip = require('geoip-lite');
 
 async function getLinkHeaders(req, res, next){
-
-    console.log(req.params);
-
+    console.log("Middleware Started");
 
     const skipUrls = ['/favicon.ico', '/.git', '/docker-compose.yml', '/.env'];
 
@@ -20,6 +18,10 @@ async function getLinkHeaders(req, res, next){
     
     const linkKey = req.params;
     const userAgent = useragent.parse(req.headers['user-agent']);
+
+    if(linkKey.linkkey === "lfq9hs"){
+        console.log("correct");
+    }
 
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const geo = geoip.lookup(ip);
@@ -40,27 +42,38 @@ async function getLinkHeaders(req, res, next){
 
     try{
 
-        const lastHour = new Date(new Date() - 60 * 60 * 1000);
-        const existingRecord = await linkTraffic.findOne({
-            where: {
-                linkKey: linkKey.linkkey,
-                ip: ip,
-                createdAt: { [Op.gte]: lastHour },
-            },
-        });
+        // const lastHour = new Date(new Date() - 60 * 60 * 1000);
+        // const existingRecord = await linkTraffic.findOne({
+        //     where: {
+        //         linkKey: linkKey.linkkey,
+        //         ip: ip,
+        //         createdAt: { [Op.gte]: lastHour },
+        //     },
+        // });
 
-        if (!existingRecord) {
-            await linkTraffic.create({
-                linkKey: linkKey.linkkey,
-                location_country: req.linkDetails.country,
-                location_city: req.linkDetails.city,
-                device_device: req.linkDetails.device,
-                device_browser: req.linkDetails.browser,
-                device_os: req.linkDetails.os,
-                referrer: req.linkDetails.referrer,
-                ip: ip
-            });
-        }
+        // if (!existingRecord) {
+        //     await linkTraffic.create({
+        //         linkKey: linkKey.linkkey,
+        //         location_country: req.linkDetails.country,
+        //         location_city: req.linkDetails.city,
+        //         device_device: req.linkDetails.device,
+        //         device_browser: req.linkDetails.browser,
+        //         device_os: req.linkDetails.os,
+        //         referrer: req.linkDetails.referrer,
+        //         ip: ip
+        //     });
+        // }
+
+                 await linkTraffic.create({
+                    linkKey: linkKey.linkkey,
+                    location_country: req.linkDetails.country,
+                    location_city: req.linkDetails.city,
+                    device_device: req.linkDetails.device,
+                    device_browser: req.linkDetails.browser,
+                    device_os: req.linkDetails.os,
+                    referrer: req.linkDetails.referrer,
+                    ip: ip
+                });
 
     } catch (error) {
 
