@@ -24,7 +24,7 @@ async function redirection(req, res){
 
         await link.save();
         
-        return res.redirect(appendedURL);
+        return res.redirect(301, appendedURL);
         // return res.redirect(link.destinationURL);
     } else {
         console.log(req.headers);

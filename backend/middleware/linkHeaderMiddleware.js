@@ -9,11 +9,11 @@ const geoip = require('geoip-lite');
 
 async function getLinkHeaders(req, res, next){
 
-    if(req.params === "carnage"){
+    if(req.params == "carnage"){
         console.log(req);
     }
     
-    
+
 
     const skipUrls = ['/favicon.ico', '/.git', '/docker-compose.yml', '/.env'];
 
