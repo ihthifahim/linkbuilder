@@ -6,3 +6,4 @@
 /backend/.env
 
 /website/node_modules
+/.env
