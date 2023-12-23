@@ -9,12 +9,14 @@ const ErrorLog = require( "../db/models/ErrorLog" );
 const {generateLinkKey, findFavicon} = require('../helpers/linkHelpers')
 const predefinedLinkKeys = require('../helpers/predefinedLinkKeys')
 
+
 const { jwtDecode } = require('jwt-decode')
 
 
 async function fetchLink(req, res){
     try {
         const { url } = req.body;
+        
         if(url){
             const response = await axios.get(url);
             const html = response.data;
@@ -37,6 +39,7 @@ async function fetchLink(req, res){
                 image: $('meta[property="og:image"]').attr('content') || '',
                 favicon: findFavicon($, url),
             };
+           
             res.json(metaTags);
         }
 
@@ -62,8 +65,6 @@ async function linkKey(req, res){
 }
 
 async function saveLink(req, res){
-
-
 
     try{
         const {link_key, destinationURL, utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content,page_favicon, page_title,
@@ -151,5 +152,29 @@ async function getLink(req, res){
 }
 
 
+async function saveLinkHome(req, res){
+    try{
+        const { destinationURL } = req.body;
+        const link_key = generateLinkKey();
+        const domain = "gum.lk";
+        const link = await Links.create({
+            link_key,
+            destinationURL,
+            domain,
+        });
+        res.status(200).json({ 
+            message: "link saved",
+            link
+        });
+ 
+    } catch (error) {
+        await ErrorLog.create({
+            errorMessage: error,
+        });
+        res.status(500).json({ error: 'Internal Server Error', message: error });
+    }
+}
 
-module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink}
+
+
+module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome}

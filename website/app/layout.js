@@ -27,18 +27,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <div className=''>
           <Header />
+          {children}
+          <footer className='py-20 container mx-auto'>
+            <p className='text-center text-sm text-purple-300 opacity-40'>Gumly.co</p>
+          </footer>
         </div>
-        
-        {children}
-        
-
 
 
         <noscript
         dangerouslySetInnerHTML={{
         __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
         }} 
-    />
+        />
         </body>
     </html>
   )

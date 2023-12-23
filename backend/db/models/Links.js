@@ -12,7 +12,7 @@ const Links = sequelize.define('links', {
     },
     userId:{
         type: DataTypes.STRING,
-        allowNull:false,
+        allowNull: true,
         references: {
             model: User,
             key: 'id',
@@ -95,8 +95,8 @@ const Links = sequelize.define('links', {
 
 User.hasMany(Links, {
     foreignKey: 'userId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    // onDelete: 'CASCADE',
+    // onUpdate: 'CASCADE'
 });
 
 module.exports = Links;
