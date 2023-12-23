@@ -1,9 +1,10 @@
 "use client";
 import React, {useState, useRef} from 'react'
-import axios from 'axios';
+
 
 import LinkCopied from './Alerts/LinkCopied';
 
+import axiosInstance from '../__utils/axiosConfig';
 
 export default function HomeLinkShortener(){
     const linkRef = useRef();
@@ -15,7 +16,7 @@ export default function HomeLinkShortener(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {destinationURL}
-        const response = await axios.post('https://gum.lk/api/link/save-link', data);
+        const response = await axiosInstance.post('link/save-link', data);
         console.log(response)
         if(response.data.message === "link saved"){
             setLink(response.data.link);
