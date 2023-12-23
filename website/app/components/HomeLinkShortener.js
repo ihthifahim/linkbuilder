@@ -15,7 +15,7 @@ export default function HomeLinkShortener(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {destinationURL}
-        const response = await axios.post('http://localhost:5050/api/link/save-link', data);
+        const response = await axios.post('https://gum.lk/api/link/save-link', data);
         console.log(response)
         if(response.data.message === "link saved"){
             setLink(response.data.link);
