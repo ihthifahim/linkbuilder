@@ -8,6 +8,7 @@ const userController = require( "../controllers/userController" );
 
 
 router.post('/fetch-preview' , LinkController.fetchLink);
+router.post('/save-link', LinkController.saveLinkHome);
 router.post('/save', authMiddleware , LinkController.saveLink);
 router.get('/get-link-key' , LinkController.linkKey);
 router.get('/get-all-links' ,authMiddleware, LinkController.getAllLinks);
