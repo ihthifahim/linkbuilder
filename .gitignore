@@ -4,3 +4,5 @@
 ./website/node_modules
 ./frontend/.env
 ./backend/.env
+
+./website/node_modules
