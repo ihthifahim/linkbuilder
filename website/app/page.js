@@ -20,7 +20,12 @@ export default function Home() {
         </div>
         <p className='text-purple-200 text-md mb-10 mx-5 md:mx-0'>Introducing a link-chew-nology management tool for a chewrific marketing team!</p>
 
-        <a href="https://app.gumly.co/register"><button className='text-sm px-5 py-2 md:px-6 md:py-2 bg-purple-700 text-purple-200 rounded-lg'>Let's get started</button></a>
+        <a href="https://app.gumly.co/register">
+          <button className="text-sm px-5 py-2 md:px-6 md:py-2 bg-purple-700 text-purple-200 rounded-lg">
+            Let's get started
+          </button>
+        </a>
+
       </section>
 
       <section>

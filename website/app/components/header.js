@@ -8,7 +8,7 @@ export default function Header(){
     <div className="container mx-auto py-5 mt-5">
         <div className='flex justify-between text-white items-center mx-5 md:mx-0'>
             <Link href="/">
-                <Image src="/logo-light.png" width={100} height={20} />
+                <Image alt="Logo" src="/logo-light.png" width={100} height={20} />
             </Link>
             
             
