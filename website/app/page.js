@@ -30,9 +30,9 @@ export default function Home() {
 
       <section>
         <div className='text-white container mx-auto'>
-
-          <HomeLinkShortener />
-          
+          <div className='w-full'>
+            <HomeLinkShortener />
+          </div>
         </div>
       
       </section>

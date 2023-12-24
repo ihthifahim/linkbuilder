@@ -64,12 +64,10 @@ export default function Login() {
             {sessionStatus === 'timedout' && <SessionTimedOut />}
 
 
-
-
             <div className="flex justify-center items-center min-h-screen bg-gray-100"
             style={{ backgroundImage: 'url(assets/images/bglogo.png)', backgroundSize: 'cover'}}>
 
-                <div className="flex flex-1 flex-col  justify-center space-y-5 max-w-md bg-white rounded-2xl px-10 py-10 shadow-xl">
+                <div className="flex flex-1 flex-col  justify-center space-y-5 max-w-md bg-white rounded-2xl px-10 py-10 shadow-xl mx-5 md:mx-0">
                     <div className="flex justify-center"><img src="/assets/images/logonew.png" className="w-20" /></div>
 
                     {loginError && (

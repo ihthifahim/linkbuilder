@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'Gumly.co - Zappy link with superhero chews',
   description: 'Introducing a link-chew-nology management tool for a chewrific marketing team!',
+  image: '/previewimage.png'
 }
 
 export default function RootLayout({ children }) {
@@ -23,7 +24,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','${GTM_ID}');`}
       </Script>
-      <body className={`${inter.className} bg-[#0D0613]`}>
+      <body className={`${inter.className} bg-[#0D0613] antialiased `}>
 
         <div className=''>
           <Header />

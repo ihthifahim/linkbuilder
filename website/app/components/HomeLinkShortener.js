@@ -48,7 +48,7 @@ export default function HomeLinkShortener(){
 
 
     return(
-        <>
+        <div>
         {isCopied && <LinkCopied />}
         <div className='flex justify-center items-center'>
             <div className='md:w-2/6'>
@@ -73,8 +73,8 @@ export default function HomeLinkShortener(){
           </div>
 
         {isLink && 
-            <div className={`md:w-2/6 mx-auto mt-5 text-black transition-all ease-in-out duration-500 mx-5 md:mx-0`}>
-                <div className='bg-purple-600 rounded-lg py-5 px-5 flex items-center hover:shadow-lg mb-5 '>
+            <div className="md:w-2/6 md:mx-auto mt-5 text-black transition-all ease-in-out duration-500 mx-5">
+                <div className='bg-purple-600 rounded-lg py-5 px-5 flex items-center hover:shadow-lg mb-5'>
                 <div className="">
                 </div>
                 <div className="w-full ml-5">
@@ -92,6 +92,6 @@ export default function HomeLinkShortener(){
         }
         
 
-        </>
+        </div>
     )
 }

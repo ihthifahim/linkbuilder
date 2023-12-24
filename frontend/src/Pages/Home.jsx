@@ -1,17 +1,16 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
     const navigate = useNavigate();
-    useEffect(() => {
-        navigate('/login');
-    },[])
+
+  useEffect(() => {
+    
+    navigate('/login');
+  }, [navigate]);
+
     return (
         <>
-        <div className="p-20">
-            
-        </div>
-
         </>
     )
 }
