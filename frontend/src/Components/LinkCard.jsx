@@ -76,10 +76,10 @@ export default function LinkCard({link}){
         <>
             {/*<Link to={`/manage/links/${link.link_key}`}>*/}
             <div className="bg-white shadow-sm rounded-lg py-5 px-5 flex items-center hover:shadow-lg mb-5">
-                <div className="">
+                <div className="hidden md:block">
                     <img alt="profile" src={link.page_favicon} className="w-16 rounded-full" />
                 </div>
-                <div className="w-full ml-5">
+                <div className="w-full md:ml-5">
                     <h2 className="font-bold text-lg text-blue-600" ref={linkRef}>
                         <a href={`/manage/links/${link.link_key}`}>
                         gum.lk/{link.link_key}

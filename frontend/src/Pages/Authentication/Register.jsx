@@ -43,8 +43,8 @@ export default function Register(){
             <PageTitle title="Register"/>
 
             <div className="flex justify-center items-center min-h-screen bg-gray-100"
-                 style={{ backgroundImage: 'url(assets/images/bg.webp)', backgroundSize: 'cover'}}>
-                <div className="flex flex-1 flex-col  justify-center space-y-5 max-w-md bg-white rounded-2xl px-10 py-20 shadow-xl">
+                 style={{ backgroundImage: 'url(assets/images/bglogo.png)', backgroundSize: 'cover'}}>
+                <div className="flex flex-1 flex-col  justify-center space-y-5 max-w-md bg-white rounded-2xl px-10 py-20 shadow-xl mx-5 md:mx-0">
 
 
                     <div className="flex flex-col space-y-2 text-center">
