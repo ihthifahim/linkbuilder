@@ -189,8 +189,8 @@ export default function CreateLinkModal({createLinkModal, linkSaved}){
 
     return(
         <>
-            <div className="flex justify-center items-center animate-fade-in fixed inset-0 z-40 bg-gray-100 bg-opacity-50 backdrop-blur-md px-5">
-                <div className="bg-white p-10 w-full lg:w-3/4 xl:w-3/6 rounded-2xl">
+            <div className="flex justify-center items-center animate-fade-in fixed  inset-0 z-40 bg-gray-100 bg-opacity-50 backdrop-blur-md px-5">
+                <div className="bg-white p-10 w-full lg:w-3/4 xl:w-3/6 rounded-2xl max-h-screen  overflow-x-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-5">
                         <div className="">
                             {metaTags.favicon &&

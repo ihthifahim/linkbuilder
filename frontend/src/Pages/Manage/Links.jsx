@@ -53,9 +53,9 @@ export default function Links(){
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 py-10">
-                <div className="col-span-2 scrollbar-hide px-5 py-5 sticky top-40 hidden max-h-[calc(100vh-150px)] self-start overflow-auto rounded-lg border border-gray-100 bg-white shadow lg:block">
+                {/* <div className="col-span-2 scrollbar-hide px-5 py-5 sticky top-40 hidden max-h-[calc(100vh-150px)] self-start overflow-auto rounded-lg border border-gray-100 bg-white shadow lg:block">
                     <h2 className="font-bold">Filter links</h2>
-                </div>
+                </div> */}
                 <div className="auto-rows-min grid-cols-1 lg:col-span-6">
                     {linkList.map((link) => (
                         <LinkCard key={link.id} link={link} />
