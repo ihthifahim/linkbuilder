@@ -15,6 +15,9 @@ router.get('/get-all-links' ,authMiddleware, LinkController.getAllLinks);
 
 router.get('/get-link', authMiddleware, LinkController.getLink);
 
+//Analytics
+router.get('/analytics/:linkkey/:range', LinkController.getAnalytics);
+
 
 
 module.exports = router;
