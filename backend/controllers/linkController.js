@@ -9,6 +9,8 @@ const ErrorLog = require( "../db/models/ErrorLog" );
 const {generateLinkKey, findFavicon} = require('../helpers/linkHelpers')
 const predefinedLinkKeys = require('../helpers/predefinedLinkKeys')
 
+const {lastHourData, last24hours, last30Days, allTimeData} = require('../helpers/trafficAnalytics');
+
 
 const { jwtDecode } = require('jwt-decode')
 
@@ -175,6 +177,33 @@ async function saveLinkHome(req, res){
     }
 }
 
+async function getAnalytics(req, res){
+    
+    const linkKey = req.params.linkkey;
+    const range = req.params.range;
+    
+    try{
+        if(range === "lasthour"){
+            const data = await lastHourData(linkKey);
+            res.status(200).json({data});
+        } else if( range === "past24hours"){
+            const data = await last24hours(linkKey);
+            res.status(200).json({data});
+        } else if( range === "last30Days"){
+            const data = await last30Days(linkKey);
+            res.status(200).json({data});
+        } else {
+            const data = await allTimeData(linkKey);
+            res.status(200).json({data});
+        }
+        
+    } catch(error){
+        res.status(500).json({ error: 'Internal Server Error', message: error });
+    }
+
+    
+}
 
 
-module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome}
+
+module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome, getAnalytics}

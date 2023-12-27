@@ -3,6 +3,7 @@
 
 const colors = require("tailwindcss/colors");
 module.exports = {
+  darkMode: "class",
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
@@ -32,7 +33,7 @@ module.exports = {
             DEFAULT: colors.gray[200],
           },
           ring: {
-            DEFAULT: colors.gray[200],
+            DEFAULT: colors.gray[100],
           },
           content: {
             subtle: colors.gray[400],
@@ -52,15 +53,15 @@ module.exports = {
             emphasis: colors.blue[400],
             inverted: colors.blue[950],
           },
-          background: {
-            muted: "#131A2B",
-            subtle: colors.gray[800],
-            DEFAULT: colors.gray[900],
-            emphasis: colors.gray[300],
-          },
-          border: {
-            DEFAULT: colors.gray[700],
-          },
+          // background: {
+          //   muted: "#131A2B",
+          //   subtle: colors.gray[800],
+          //   DEFAULT: colors.gray[900],
+          //   emphasis: colors.gray[300],
+          // },
+          // border: {
+          //   DEFAULT: colors.gray[700],
+          // },
           ring: {
             DEFAULT: colors.gray[800],
           },
