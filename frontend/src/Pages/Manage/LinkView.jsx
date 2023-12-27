@@ -10,6 +10,7 @@ export default function LinkView(){
 
     const [linkDetails, setLinkDetails] = useState([]);
     const [loadingPage, setLoadingPage] = useState(false)
+    const [loadingData, setLoadingData] = useState(false);
 
     const [clickGraph, setClickGraph] = useState([]);
 
@@ -24,13 +25,16 @@ export default function LinkView(){
     }, [] );
 
     const getPastHour = async () => {
+      setLoadingData(true)
       try{
         const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
         setClickGraph(response.data.data)
+        setLoadingData(false)
         
       } catch(error){
         console.log(error)
       }
+
     }
 
     const getLink = async () => {
@@ -45,9 +49,11 @@ export default function LinkView(){
     }
 
     const handleGraphDropdown = async (e) => {
+      setLoadingData(true)
       const option = e.target.value
       const response = await axiosInstance.get(`link/analytics/${linkkey}/${option}`)
       setClickGraph(response.data.data);
+      setLoadingData(false);
     }
 
     return(
@@ -71,16 +77,19 @@ export default function LinkView(){
                     </div>
 
                     <Card>
-                    <BarChart
-                      className="mt-6"
-                      data={clickGraph}
-                      index="name"
-                      categories={["Clicks"]}
-                      colors={["violet"]}
-                      
-                      valueFormatter={valueFormatter}
-                      yAxisWidth={48}
-                    />
+                      {loadingData ? <div className='h-48 flex justify-center items-center'>Loading...</div> : (
+                        <BarChart
+                          className="mt-6"
+                          data={clickGraph}
+                          index="name"
+                          categories={["Clicks"]}
+                          colors={["violet"]}
+                          
+                          valueFormatter={valueFormatter}
+                          yAxisWidth={48}
+                        />
+                      )}
+                    
                     </Card>
 
                 </>

@@ -178,7 +178,6 @@ async function saveLinkHome(req, res){
 }
 
 async function getAnalytics(req, res){
-    
     const linkKey = req.params.linkkey;
     const range = req.params.range;
     
