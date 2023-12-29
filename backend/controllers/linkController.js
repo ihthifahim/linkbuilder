@@ -10,6 +10,7 @@ const {generateLinkKey, findFavicon} = require('../helpers/linkHelpers')
 const predefinedLinkKeys = require('../helpers/predefinedLinkKeys')
 
 const {lastHourData, last24hours, last30Days, allTimeData} = require('../helpers/trafficAnalytics');
+const {deleteLinkHelper} = require('../helpers/deleteLink');
 
 
 const { jwtDecode } = require('jwt-decode')
@@ -204,5 +205,16 @@ async function getAnalytics(req, res){
 }
 
 
+async function deleteLink(req, res){
+    const linkKey = req.params.linkkey;
+    deleteLinkHelper(linkKey).then((result) => {
+        console.log(result);
+        res.status(200).json({ message: result});
+    }).catch((error) => {
+        console.error('error in deleting link', error);
+    })
+}
 
-module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome, getAnalytics}
+
+
+module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome, getAnalytics, deleteLink}

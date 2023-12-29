@@ -24,6 +24,7 @@ export default function Links(){
         try{
             const response = await axiosInstance.get('link/get-all-links');
             setLinkList(response.data)
+           
         } catch (error){
             console.log({error})
         }
@@ -57,9 +58,13 @@ export default function Links(){
                     <h2 className="font-bold">Filter links</h2>
                 </div> */}
                 <div className="auto-rows-min  grid-cols-1 lg:col-span-12">
-                    {linkList.map((link) => (
-                        <LinkCard key={link.id} link={link} />
-                    ))}
+                    {linkList.length === 0 ? (
+                        <h2>No links found.</h2>
+                    ) : (
+                        linkList.map((link) => (
+                            <LinkCard key={link.id} link={link} />
+                        ))
+                    )}
                 </div>
             </div>
 
