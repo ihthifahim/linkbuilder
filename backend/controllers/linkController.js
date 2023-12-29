@@ -181,19 +181,22 @@ async function saveLinkHome(req, res){
 async function getAnalytics(req, res){
     const linkKey = req.params.linkkey;
     const range = req.params.range;
+
+    const timezone = req.headers.usertimezone;
+    
     
     try{
         if(range === "lasthour"){
-            const data = await lastHourData(linkKey);
+            const data = await lastHourData(linkKey, timezone);
             res.status(200).json({data});
         } else if( range === "past24hours"){
-            const data = await last24hours(linkKey);
+            const data = await last24hours(linkKey, timezone);
             res.status(200).json({data});
         } else if( range === "last30Days"){
-            const data = await last30Days(linkKey);
+            const data = await last30Days(linkKey, timezone);
             res.status(200).json({data});
         } else {
-            const data = await allTimeData(linkKey);
+            const data = await allTimeData(linkKey, timezone);
             res.status(200).json({data});
         }
         
