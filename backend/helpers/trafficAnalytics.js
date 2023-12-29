@@ -21,8 +21,8 @@ async function lastHourData(linkKey, timezone) {
 
         const intervals = [];
         for (let i = 0; i < 30; i++) {
-            const intervalStart = moment(startTime).tz(timezone).add(i * 2, interval).toDate();
-            const intervalEnd = moment(intervalStart).tz(timezone).add(2, interval).toDate();
+            const intervalStart = moment(startTime).add(i * 2, interval).toDate();
+            const intervalEnd = moment(intervalStart).add(2, interval).toDate();
             const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
