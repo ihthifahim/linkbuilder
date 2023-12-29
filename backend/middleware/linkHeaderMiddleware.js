@@ -7,6 +7,8 @@ const { Op } = require('sequelize');
 const useragent = require('express-useragent');
 const geoip = require('geoip-lite');
 
+const extractDomainFromReferer = require('../helpers/extractDomain');
+
 async function getLinkHeaders(req, res, next){
     
 
@@ -23,7 +25,10 @@ async function getLinkHeaders(req, res, next){
     const geo = geoip.lookup(ip);
 
 
-    const referrer = req.headers.referer || req.headers.referrer || '';
+    const refererDomain = req.headers.referer || req.headers.referrer || '';
+    const referrer = extractDomainFromReferer(refererDomain);
+
+    
 
     req.linkDetails = {
         city: geo ? geo.city : 'Unknown',
