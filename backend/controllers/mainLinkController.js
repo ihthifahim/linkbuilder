@@ -34,10 +34,7 @@ async function redirection(req, res){
 }
 
 async function testHeader(req, res){
-    const headers = req.headers;
-    const { method, url, httpVersion, trailers } = req;
-
-    res.status(200).json({ headers, method, url, httpVersion, trailers });
+    res.status(200).json({hello: "Hello"});
 
 }
 
