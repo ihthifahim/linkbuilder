@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
-const moment = require('moment-timezone');
+const moment = require('moment');
+const {DateTime} = require('luxon');
 const axios = require('axios');
 
 const sequelize = require('../config/sequelize');
@@ -10,21 +11,21 @@ const linkTraffic = require('../db/models/LinkTraffic');
 
 async function lastHourData(linkKey, timezone) {
     const linkId = linkKey;
-    const now = new Date();
+    const now = DateTime.now();
     
     let startTime, interval;
 
     try{
-        startTime = moment(now).tz(timezone).subtract(1, 'hour').toDate(); 
-        const endTime = moment().tz(timezone).toDate();
+        startTime = DateTime.fromJSDate(now.setZone(timezone).minus({ hours: 1 }).toJSDate());
+        const endTime = DateTime.fromJSDate(now.setZone(timezone).toJSDate());
         interval = 'minutes';
 
         const intervals = [];
         for (let i = 0; i < 30; i++) {
-            const intervalStart = moment(startTime).add(i * 2, interval).toDate();
-            const intervalEnd = moment(intervalStart).add(2, interval).toDate();
-            const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
-            intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
+            const intervalStart = startTime.plus({ minutes: i * 2 });
+            const intervalEnd = intervalStart.plus({ minutes: 2 });
+            const intervalName = `${intervalStart.toFormat('h:mm a')} - ${intervalEnd.toFormat('h:mm a')}`;
+            intervals.push({ start: intervalStart.toJSDate(), end: intervalEnd.toJSDate(), name: intervalName });
         }
         
         const clicksData = await Promise.all(
