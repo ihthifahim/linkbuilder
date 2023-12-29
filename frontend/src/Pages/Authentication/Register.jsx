@@ -33,7 +33,7 @@ export default function Register(){
             localStorage.setItem('locale', userTimezone);
             getUserData();
             setIsLoading( false )
-            navigate( '/manage/dashboard' );
+            navigate( '/manage/links' );
         } catch(error){
 
         }

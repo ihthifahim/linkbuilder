@@ -1,6 +1,9 @@
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const moment = require('moment');
+const axios = require('axios');
+
+const sequelize = require('../config/sequelize');
 
 const Links = require('../db/models/Links');
 const linkTraffic = require('../db/models/LinkTraffic');
@@ -9,20 +12,16 @@ async function lastHourData(linkKey) {
     const linkId = linkKey;
   
     const now = new Date();
+    
     let startTime, interval;
 
     try{
         startTime = moment(now).subtract(1, 'hour').toDate(); 
+        const endTime = moment().toDate();
         interval = 'minutes';
-        //   else if (selectedOption === 'past24Hours') {
-        //     startTime = moment(now).subtract(24, 'hours').toDate();
-        //     interval = 'hours'; // You can adjust the interval as needed
-        //   } else {
-        //     return res.status(400).json({ error: 'Invalid selected option' });
-        //   }
-        
+       
         const intervals = [];
-        for (let i = 0; i < 31; i++) {
+        for (let i = 0; i < 30; i++) {
             const intervalStart = moment(startTime).add(i * 2, interval).toDate();
             const intervalEnd = moment(intervalStart).add(2, interval).toDate();
             const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
@@ -44,7 +43,48 @@ async function lastHourData(linkKey) {
             })
         );
 
-        return clicksData;
+        
+        const totalClicks = await linkTraffic.findOne({
+            attributes: [
+                'linkKey',
+                [Sequelize.fn('COUNT', '*'), 'totalClicks'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime,
+                    [Op.lt]: endTime,
+                },
+            },
+            raw: true,
+        });
+        
+    
+        const clicksByCountry = await linkTraffic.findAll({
+            attributes: [
+                ['location_country', 'country'],
+                [sequelize.fn('COUNT', '*'), 'countryCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime,
+                },
+            },
+            group: ['location_country'],
+            order: [
+                [Sequelize.literal('countryCount DESC')],
+            ],
+        });
+
+        const countryData = clicksByCountry.map(entry => ({
+            name: entry.get('country'),
+            value: entry.get('countryCount'),
+        }));
+
+        
+        return {clicksData, countryData, totalClicks};
+
     } catch(error){
         console.log(error)
     }
@@ -62,7 +102,7 @@ async function last24hours(linkKey){
         interval = 'hours';
        
         const intervals = [];
-        for (let i = 0; i < 31; i++) {
+        for (let i = 0; i < 12; i++) {
             const intervalStart = moment(startTime).add(i * 2, interval).toDate();
             const intervalEnd = moment(intervalStart).add(2, interval).toDate();
             const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
@@ -84,7 +124,47 @@ async function last24hours(linkKey){
             })
         );
 
-        return clicksData;
+        const totalClicks = await linkTraffic.findOne({
+            attributes:[
+                'linkKey',
+                [sequelize.fn('COUNT', '*'), 'totalClicks']
+            ],
+            where: {
+                linkKey: linkId,
+                createdAt: {
+                    [Op.gte]: startTime,
+                    [Op.lt]: intervals[0].end
+                },
+            },
+            raw: true,
+        })
+
+        const clicksByCountry = await linkTraffic.findAll({
+            attributes: [
+                ['location_country', 'country'],
+                [sequelize.fn('COUNT', '*'), 'countryCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime,
+                },
+            },
+            group: ['location_country'],
+            order: [
+                [Sequelize.literal('countryCount DESC')],
+            ],
+        });
+
+        const countryData = clicksByCountry.map(entry => ({
+            country: entry.get('country'),
+            count: entry.get('countryCount'),
+        }));
+
+        
+
+        return {clicksData, countryData, totalClicks};
+
     } catch(error){
         console.log(error)
     }
@@ -139,7 +219,40 @@ async function allTimeData(linkKey) {
             })
         );
 
-        return clicksData;
+        const clicksByCountry = await linkTraffic.findAll({
+            attributes: [
+                ['location_country', 'country'],
+                [sequelize.fn('COUNT', '*'), 'countryCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+            },
+            group: ['location_country'],
+            order:[
+                [sequelize.literal('countryCount DESC')],
+            ],
+        });
+
+        const totalClicks = await linkTraffic.findOne({
+            attributes:[
+                'linkKey',
+                [sequelize.fn('COUNT', '*'), 'totalClicks']
+            ],
+            where: {
+                linkKey: linkKey,
+            },
+            raw: true,
+        })
+
+        const countryData = clicksByCountry.map(entry => ({
+            country: entry.get('country'),
+            count: entry.get('countryCount'),
+        }));
+        
+
+        return {clicksData, countryData, totalClicks};
+
+
     } catch (error) {
         console.log(error);
     }
@@ -150,11 +263,9 @@ async function last30Days(linkKey) {
     const linkId = linkKey;
 
     try {
-        // Calculate the start time as 30 days ago
         const startTime = moment().subtract(30, 'days').toDate();
-
-        // Find the latest timestamp in the LinkTraffic table
-        const { maxTimestamp } = await linkTraffic.findOne({
+        const endTime = moment().toDate();
+        const maxTimestampResult = await linkTraffic.findOne({
             attributes: [
                 [Sequelize.fn('MAX', Sequelize.col('createdAt')), 'maxTimestamp'],
             ],
@@ -167,20 +278,19 @@ async function last30Days(linkKey) {
             raw: true,
         });
 
-        if (!maxTimestamp) {
-            // Handle the case when there's no data available
+        if (!maxTimestampResult.maxTimestamp) {
             return [];
         }
 
         // Calculate the number of intervals based on the time range
-        const intervalCount = 30;
-        const intervalDuration = 24 * 60 * 60 * 1000;
+        const intervalCount = 15; // 30 days divided into 15 intervals (2 days each)
+        const intervalDuration = 2 * 24 * 60 * 60 * 1000;
 
         const intervals = [];
         for (let i = 0; i < intervalCount; i++) {
             const intervalStart = new Date(startTime.getTime() + i * intervalDuration);
             const intervalEnd = new Date(startTime.getTime() + (i + 1) * intervalDuration);
-            const intervalName = `${moment(intervalStart).format('MMM D, YYYY')}`;
+            const intervalName = `${moment(intervalStart).format('MMM D, YYYY')} - ${moment(intervalEnd).format('MMM D, YYYY')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
 
@@ -199,9 +309,50 @@ async function last30Days(linkKey) {
             })
         );
 
-        return clicksData;
+
+           
+        const clicksByCountry = await linkTraffic.findAll({
+            attributes: [
+                ['location_country', 'country'],
+                [sequelize.fn('COUNT', '*'), 'countryCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime,
+                    [Op.lt]: endTime,
+                },
+            },
+            group: ['location_country'],
+            order: [
+                [Sequelize.literal('countryCount DESC')],
+            ],
+        });
+
+        const totalClicks = await linkTraffic.findOne({
+            attributes: [
+                'linkKey',
+                [Sequelize.fn('COUNT', '*'), 'totalClicks'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime,
+                    [Op.lt]: endTime,
+                },
+            },
+            raw: true,
+        });
+
+        const countryData = clicksByCountry.map(entry => ({
+            country: entry.get('country'),
+            count: entry.get('countryCount'),
+        }));
+
+        return { clicksData, countryData, totalClicks };
+
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
