@@ -188,6 +188,7 @@ async function getAnalytics(req, res){
     try{
         if(range === "lasthour"){
             const data = await lastHourData(linkKey, timezone);
+            console.log(timezone);
             console.log(data);
             res.status(200).json({data});
         } else if( range === "past24hours"){

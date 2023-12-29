@@ -27,8 +27,12 @@ export default function LinkView(){
     
     useEffect( () => {
         getLink();
-        getPastHour();
+        
     }, [] );
+
+    useEffect(() => {
+      getPastHour();
+    },[])
 
     const getLink = async () => {
         setLoadingPage(true)
@@ -48,10 +52,10 @@ export default function LinkView(){
     }
 
     const getPastHour = async () => {
+
       setLoadingData(true)
       try{
         const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
-        console.log(response)
         setClickGraph(response.data.data.clicksData)
         setCountryData(response.data.data.countryData);
         
