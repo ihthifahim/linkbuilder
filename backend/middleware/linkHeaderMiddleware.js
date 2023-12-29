@@ -8,8 +8,8 @@ const useragent = require('express-useragent');
 const geoip = require('geoip-lite');
 
 async function getLinkHeaders(req, res, next){
-    return req.headers;
     
+
     const skipUrls = ['/favicon.ico', '/.git', '/docker-compose.yml', '/.env'];
 
     if (skipUrls.includes(req.url)) {
