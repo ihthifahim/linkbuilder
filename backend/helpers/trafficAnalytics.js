@@ -11,20 +11,21 @@ const linkTraffic = require('../db/models/LinkTraffic');
 
 async function lastHourData(linkKey, timezone) {
     const linkId = linkKey;
-    const now = DateTime.now();
+    const now = DateTime.now().setZone(timezone);
     
     let startTime, interval;
 
     try{
-        startTime = moment(now).subtract(24, 'hours').toDate();
-        const endTime = moment().toDate();
+        startTime = now.minus({ hours: 1 });
+        const endTime = now;
+        
         interval = 'minutes';
 
         const intervals = [];
         for (let i = 0; i < 30; i++) {
-            const intervalStart = moment(startTime).add(i * 2, interval).toDate();
-            const intervalEnd = moment(intervalStart).add(2, interval).toDate();
-            const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
+            const intervalStart = startTime.plus({ minutes: i * 2 });
+            const intervalEnd = intervalStart.plus({ minutes: 2 });
+            const intervalName = `${intervalStart.toFormat('h:mm a')} - ${intervalEnd.toFormat('h:mm a')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
         
@@ -52,8 +53,8 @@ async function lastHourData(linkKey, timezone) {
             where: {
                 linkKey: linkKey,
                 createdAt: {
-                    [Op.gte]: startTime,
-                    [Op.lt]: endTime,
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
                 },
             },
             raw: true,
@@ -68,8 +69,8 @@ async function lastHourData(linkKey, timezone) {
             where: {
                 linkKey: linkKey,
                 createdAt: {
-                    [Op.gte]: startTime,
-                    [Op.lt]: endTime,
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
                 },
             },
             group: ['location_country'],
@@ -96,19 +97,19 @@ async function lastHourData(linkKey, timezone) {
 async function last24hours(linkKey, timezone){
     const linkId = linkKey;
   
-    const now = new Date();
+    const now = DateTime.now().setZone(timezone);
     let startTime, interval;
 
     try{
-        startTime = moment(now).tz(timezone).subtract(24, 'hours').toDate();
-        const endTime = moment().tz(timezone).toDate();
+        startTime = now.minus({ hours: 24 });
+        const endTime = now;
         interval = 'hours';
        
         const intervals = [];
         for (let i = 0; i < 12; i++) {
-            const intervalStart = moment(startTime).tz(timezone).add(i * 2, interval).toDate();
-            const intervalEnd = moment(intervalStart).tz(timezone).add(2, interval).toDate();
-            const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
+            const intervalStart = startTime.plus({ hours: i * 2 });
+            const intervalEnd = intervalStart.plus({ hours: 2 });
+            const intervalName = `${intervalStart.toFormat('h:mm a')} - ${intervalEnd.toFormat('h:mm a')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
         
@@ -135,8 +136,8 @@ async function last24hours(linkKey, timezone){
             where: {
                 linkKey: linkId,
                 createdAt: {
-                    [Op.gte]: startTime,
-                    [Op.lt]: endTime
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
                 },
             },
             raw: true,
@@ -150,8 +151,8 @@ async function last24hours(linkKey, timezone){
             where: {
                 linkKey: linkKey,
                 createdAt: {
-                    [Op.gte]: startTime,
-                    [Op.lt]: endTime,
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
                 },
             },
             group: ['location_country'],
@@ -265,10 +266,12 @@ async function allTimeData(linkKey, timezone) {
 
 async function last30Days(linkKey, timezone) {
     const linkId = linkKey;
+    const now = DateTime.now().setZone(timezone);
 
     try {
-        const startTime = moment().tz(timezone).subtract(30, 'days').toDate();
-        const endTime = moment().tz(timezone).toDate();
+        startTime = now.minus({ days: 30 });
+        const endTime = now;
+
         const maxTimestampResult = await linkTraffic.findOne({
             attributes: [
                 [Sequelize.fn('MAX', Sequelize.col('createdAt')), 'maxTimestamp'],
@@ -276,7 +279,7 @@ async function last30Days(linkKey, timezone) {
             where: {
                 linkKey: linkId,
                 createdAt: {
-                    [Op.gte]: startTime,
+                    [Op.gte]: startTime.toJSDate(),
                 },
             },
             raw: true,
@@ -286,16 +289,16 @@ async function last30Days(linkKey, timezone) {
             return [];
         }
 
-        // Calculate the number of intervals based on the time range
-        const intervalCount = 15; // 30 days divided into 15 intervals (2 days each)
+        
+        const intervalCount = 15; 
         const intervalDuration = 2 * 24 * 60 * 60 * 1000;
 
         const intervals = [];
-        for (let i = 0; i < intervalCount; i++) {
-            const intervalStart = moment(startTime).add(i * intervalDuration, 'milliseconds');
-            const intervalEnd = moment(startTime).add((i + 1) * intervalDuration, 'milliseconds');
-            const intervalName = `${intervalStart.format('MMM D, YYYY')} - ${intervalEnd.format('MMM D, YYYY')}`;
-            intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
+        for (let i = 0; i < intervalCount; i++) { 
+            const intervalStart = startTime.plus({ milliseconds: i * intervalDuration });
+            const intervalEnd = startTime.plus({ milliseconds: (i + 1) * intervalDuration });
+            const intervalName = `${intervalStart.toFormat('MMM d, yyyy')} - ${intervalEnd.toFormat('MMM d, yyyy')}`;
+            intervals.push({ start: intervalStart.toJSDate(), end: intervalEnd.toJSDate(), name: intervalName });
         }
 
         const clicksData = await Promise.all(
@@ -323,8 +326,8 @@ async function last30Days(linkKey, timezone) {
             where: {
                 linkKey: linkKey,
                 createdAt: {
-                    [Op.gte]: startTime,
-                    [Op.lt]: endTime,
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
                 },
             },
             group: ['location_country'],
@@ -341,8 +344,8 @@ async function last30Days(linkKey, timezone) {
             where: {
                 linkKey: linkKey,
                 createdAt: {
-                    [Op.gte]: startTime,
-                    [Op.lt]: endTime,
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
                 },
             },
             raw: true,
