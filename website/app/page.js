@@ -1,5 +1,6 @@
 
 import Image from 'next/image'
+import Head from "next/head";
 
 
 import HomeLinkShortener from './components/HomeLinkShortener'
@@ -7,6 +8,18 @@ import HomeLinkShortener from './components/HomeLinkShortener'
 export default function Home() {
 
   return (
+    <>
+    <Head>
+        <meta property="og:url" content="https://gumly.co/" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="Introducing a link-chew-nology management tool for a chewrific marketing team!" />
+        <meta
+          property="og:description"
+          content="Introducing a link-chew-nology management tool for a chewrific marketing team!"
+        />
+        <meta property="og:image" content="https://gumly.co/previewimage.png" />
+    </Head>
+
     <main className="overflow-x-hidden ">
       <section className='relative z-10 py-20 text-center'>
         <div className="absolute left-1/2 top-1/2 -z-10 h-[60px] w-[800px] -translate-x-1/2 -translate-y-1/2 opacity-40 blur-[70px] bg-purple-600"></div>
@@ -37,5 +50,7 @@ export default function Home() {
       
       </section>
     </main>
+    </>
+    
   )
 }
