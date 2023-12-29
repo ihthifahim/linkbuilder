@@ -19,7 +19,7 @@ async function lastHourData(linkKey) {
         startTime = moment(now).subtract(1, 'hour').toDate(); 
         const endTime = moment().toDate();
         interval = 'minutes';
-       
+
         const intervals = [];
         for (let i = 0; i < 30; i++) {
             const intervalStart = moment(startTime).add(i * 2, interval).toDate();
@@ -69,6 +69,7 @@ async function lastHourData(linkKey) {
                 linkKey: linkKey,
                 createdAt: {
                     [Op.gte]: startTime,
+                    [Op.lt]: endTime,
                 },
             },
             group: ['location_country'],
@@ -78,8 +79,8 @@ async function lastHourData(linkKey) {
         });
 
         const countryData = clicksByCountry.map(entry => ({
-            name: entry.get('country'),
-            value: entry.get('countryCount'),
+            country: entry.get('country'),
+            count: entry.get('countryCount'),
         }));
 
         
@@ -99,6 +100,7 @@ async function last24hours(linkKey){
 
     try{
         startTime = moment(now).subtract(24, 'hours').toDate();
+        const endTime = moment().toDate();
         interval = 'hours';
        
         const intervals = [];
@@ -133,7 +135,7 @@ async function last24hours(linkKey){
                 linkKey: linkId,
                 createdAt: {
                     [Op.gte]: startTime,
-                    [Op.lt]: intervals[0].end
+                    [Op.lt]: endTime
                 },
             },
             raw: true,
@@ -148,6 +150,7 @@ async function last24hours(linkKey){
                 linkKey: linkKey,
                 createdAt: {
                     [Op.gte]: startTime,
+                    [Op.lt]: endTime,
                 },
             },
             group: ['location_country'],
