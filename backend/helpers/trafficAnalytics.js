@@ -35,8 +35,8 @@ async function lastHourData(linkKey, timezone) {
                     where: {
                         linkKey: linkId,
                         createdAt: {
-                            [Op.gte]: start,
-                            [Op.lt]: end,
+                            [Op.gte]: start.toJSDate(),
+                            [Op.lt]: end.toJSDate(),
                         },
                     },
                 });
@@ -119,8 +119,8 @@ async function last24hours(linkKey, timezone){
                     where: {
                         linkKey: linkId,
                         createdAt: {
-                            [Op.gte]: start,
-                            [Op.lt]: end,
+                            [Op.gte]: start.toJSDate(),
+                            [Op.lt]: end.toJSDate(),
                         },
                     },
                 });
