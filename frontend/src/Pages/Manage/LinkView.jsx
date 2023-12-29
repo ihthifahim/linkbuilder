@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import axiosInstance from "../../utils/axiosConfig";
 import LazySpinner from "../../Components/LazySpinner";
 
@@ -8,6 +8,7 @@ import CountryBarList from './Links/Analytics/CountryBarList';
 
 export default function LinkView(){
     const {linkkey} = useParams();
+    const history = useNavigate();
 
     const [linkDetails, setLinkDetails] = useState([]);
     const [loadingPage, setLoadingPage] = useState(false)
@@ -28,10 +29,16 @@ export default function LinkView(){
         setLoadingPage(true)
         try{
             const response = await axiosInstance.get(`link/get-link?key=${linkkey}`);
+            
+            if(!response.data){
+              history('/manage/links');
+              return;
+            }
+
             setLinkDetails(response.data)
             setLoadingPage(false)
         } catch(error){
-            console.log(error.name)
+            console.log(error)
         }
     }
 
