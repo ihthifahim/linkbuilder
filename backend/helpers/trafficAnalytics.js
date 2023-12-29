@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const axios = require('axios');
 
 const sequelize = require('../config/sequelize');
@@ -8,22 +8,21 @@ const sequelize = require('../config/sequelize');
 const Links = require('../db/models/Links');
 const linkTraffic = require('../db/models/LinkTraffic');
 
-async function lastHourData(linkKey) {
+async function lastHourData(linkKey, timezone) {
     const linkId = linkKey;
-  
     const now = new Date();
     
     let startTime, interval;
 
     try{
-        startTime = moment(now).subtract(1, 'hour').toDate(); 
-        const endTime = moment().toDate();
+        startTime = moment(now).tz(timezone).subtract(1, 'hour').toDate(); 
+        const endTime = moment().tz(timezone).toDate();
         interval = 'minutes';
 
         const intervals = [];
         for (let i = 0; i < 30; i++) {
-            const intervalStart = moment(startTime).add(i * 2, interval).toDate();
-            const intervalEnd = moment(intervalStart).add(2, interval).toDate();
+            const intervalStart = moment(startTime).tz(timezone).add(i * 2, interval).toDate();
+            const intervalEnd = moment(intervalStart).tz(timezone).add(2, interval).toDate();
             const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
@@ -92,21 +91,21 @@ async function lastHourData(linkKey) {
 }
 
 
-async function last24hours(linkKey){
+async function last24hours(linkKey, timezone){
     const linkId = linkKey;
   
     const now = new Date();
     let startTime, interval;
 
     try{
-        startTime = moment(now).subtract(24, 'hours').toDate();
-        const endTime = moment().toDate();
+        startTime = moment(now).tz(timezone).subtract(24, 'hours').toDate();
+        const endTime = moment().tz(timezone).toDate();
         interval = 'hours';
        
         const intervals = [];
         for (let i = 0; i < 12; i++) {
-            const intervalStart = moment(startTime).add(i * 2, interval).toDate();
-            const intervalEnd = moment(intervalStart).add(2, interval).toDate();
+            const intervalStart = moment(startTime).tz(timezone).add(i * 2, interval).toDate();
+            const intervalEnd = moment(intervalStart).tz(timezone).add(2, interval).toDate();
             const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
@@ -174,7 +173,7 @@ async function last24hours(linkKey){
 }
 
 
-async function allTimeData(linkKey) {
+async function allTimeData(linkKey, timezone) {
     const linkId = linkKey;
 
     try {
@@ -262,12 +261,12 @@ async function allTimeData(linkKey) {
 }
 
 
-async function last30Days(linkKey) {
+async function last30Days(linkKey, timezone) {
     const linkId = linkKey;
 
     try {
-        const startTime = moment().subtract(30, 'days').toDate();
-        const endTime = moment().toDate();
+        const startTime = moment().tz(timezone).subtract(30, 'days').toDate();
+        const endTime = moment().tz(timezone).toDate();
         const maxTimestampResult = await linkTraffic.findOne({
             attributes: [
                 [Sequelize.fn('MAX', Sequelize.col('createdAt')), 'maxTimestamp'],
@@ -291,9 +290,9 @@ async function last30Days(linkKey) {
 
         const intervals = [];
         for (let i = 0; i < intervalCount; i++) {
-            const intervalStart = new Date(startTime.getTime() + i * intervalDuration);
-            const intervalEnd = new Date(startTime.getTime() + (i + 1) * intervalDuration);
-            const intervalName = `${moment(intervalStart).format('MMM D, YYYY')} - ${moment(intervalEnd).format('MMM D, YYYY')}`;
+            const intervalStart = moment(startTime).add(i * intervalDuration, 'milliseconds');
+            const intervalEnd = moment(startTime).add((i + 1) * intervalDuration, 'milliseconds');
+            const intervalName = `${intervalStart.format('MMM D, YYYY')} - ${intervalEnd.format('MMM D, YYYY')}`;
             intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
 

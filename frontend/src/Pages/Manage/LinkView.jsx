@@ -19,6 +19,11 @@ export default function LinkView(){
     const [totalClicks, setTotalClicks] = useState(0);
 
     const valueFormatter = (number) => `${new Intl.NumberFormat("us").format(number).toString()}`;
+
+    const convertTimeZone = (utcTime) => {
+      const userTimeZone = localStorage.getItem('locale') || 'UTC';
+      return new Date(utcTime).toLocaleString('en-us', { timeZone: userTimeZone});
+    }
     
     useEffect( () => {
         getLink();
@@ -46,10 +51,10 @@ export default function LinkView(){
       setLoadingData(true)
       try{
         const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
+        console.log(response)
         setClickGraph(response.data.data.clicksData)
         setCountryData(response.data.data.countryData);
         
-
         const formattedTotalClicks = response.data.data.totalClicks.totalClicks.toLocaleString();
         setTotalClicks(formattedTotalClicks);
 
