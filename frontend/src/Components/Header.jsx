@@ -81,9 +81,9 @@ export default function Header(){
                     <div className="">
                         <div className="">
                             <nav className="-mb-px flex gap-6" aria-label="Tabs">
-                                <Link to="/manage/dashboard" className={`shrink-0 px-1 pb-4 text-sm font-medium hover:text-sky-600 ${location.pathname === '/manage/dashboard' ? 'border-b-2 text-sky-600 border-sky-500' : 'text-gray-500'} `}>
+                                {/* <Link to="/manage/dashboard" className={`shrink-0 px-1 pb-4 text-sm font-medium hover:text-sky-600 ${location.pathname === '/manage/dashboard' ? 'border-b-2 text-sky-600 border-sky-500' : 'text-gray-500'} `}>
                                     Dashboard
-                                </Link>
+                                </Link> */}
 
                                 <Link to="/manage/links" className={`shrink-0 px-1 pb-4 text-sm font-medium hover:text-sky-600 ${location.pathname === '/manage/links' ? 'border-b-2 text-sky-600 border-sky-500' : 'text-gray-500'} `} aria-current="page">
                                     Links

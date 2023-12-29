@@ -4,38 +4,25 @@ import axiosInstance from "../../utils/axiosConfig";
 import LazySpinner from "../../Components/LazySpinner";
 
 import { Card, BarChart } from "@tremor/react";
+import CountryBarList from './Links/Analytics/CountryBarList';
 
 export default function LinkView(){
     const {linkkey} = useParams();
 
     const [linkDetails, setLinkDetails] = useState([]);
     const [loadingPage, setLoadingPage] = useState(false)
+
     const [loadingData, setLoadingData] = useState(false);
-
     const [clickGraph, setClickGraph] = useState([]);
-
+    const [countryData, setCountryData] = useState([]);
+    const [totalClicks, setTotalClicks] = useState(0);
 
     const valueFormatter = (number) => `${new Intl.NumberFormat("us").format(number).toString()}`;
-
-
+    
     useEffect( () => {
         getLink();
         getPastHour();
-        
     }, [] );
-
-    const getPastHour = async () => {
-      setLoadingData(true)
-      try{
-        const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
-        setClickGraph(response.data.data)
-        setLoadingData(false)
-        
-      } catch(error){
-        console.log(error)
-      }
-
-    }
 
     const getLink = async () => {
         setLoadingPage(true)
@@ -48,18 +35,41 @@ export default function LinkView(){
         }
     }
 
+    const getPastHour = async () => {
+      setLoadingData(true)
+      try{
+        const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
+        setClickGraph(response.data.data.clicksData)
+        setCountryData(response.data.data.countryData);
+
+        const formattedTotalClicks = response.data.data.totalClicks.totalClicks.toLocaleString();
+        setTotalClicks(formattedTotalClicks);
+
+        setLoadingData(false)
+        
+        
+      } catch(error){
+        console.log(error)
+      }
+
+  }
+
     const handleGraphDropdown = async (e) => {
       setLoadingData(true)
       const option = e.target.value
       const response = await axiosInstance.get(`link/analytics/${linkkey}/${option}`)
-      setClickGraph(response.data.data);
+      setClickGraph(response.data.data.clicksData);
+      setCountryData(response.data.data.countryData);
+      
+      const formattedTotalClicks = response.data.data.totalClicks.totalClicks.toLocaleString();
+      setTotalClicks(formattedTotalClicks);
       setLoadingData(false);
-    }
+  }
 
     return(
         <>
             {loadingPage ? (<LazySpinner />) : (
-                <>
+                <div className='w-full md:w-3/4 xl:w-2/4 mx-auto'>
                     
 
                     <div className='flex justify-between items-center'>
@@ -76,23 +86,32 @@ export default function LinkView(){
                       </div>
                     </div>
 
-                    <Card>
-                      {loadingData ? <div className='h-48 flex justify-center items-center'>Loading...</div> : (
+                    <Card className=''>
+                      <div>
+                        <h2 className='font-bold text-3xl'>{totalClicks}</h2>
+                        <p className='text-sm'>Total Clicks</p>
+                      </div>
+                        {loadingData ? <div className='h-72 flex justify-center items-center'>Loading...</div> : (
                         <BarChart
-                          className="mt-6"
-                          data={clickGraph}
-                          index="name"
-                          categories={["Clicks"]}
-                          colors={["violet"]}
-                          
-                          valueFormatter={valueFormatter}
-                          yAxisWidth={48}
+                            className="mt-6"
+                            data={clickGraph}
+                            index="name"
+                            categories={["Clicks"]}
+                            colors={["violet"]}
+                            
+                            valueFormatter={valueFormatter}
+                            yAxisWidth={48}
                         />
-                      )}
-                    
+                        )}
                     </Card>
 
-                </>
+                    <div className='grid grid-cols-2 gap-6 mt-6'>
+                      <CountryBarList countryData={countryData} />
+                    </div>
+
+                    
+
+                </div>
             )}
 
         </>

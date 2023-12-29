@@ -4,6 +4,7 @@ const Links = require('../db/models/Links');
 async function redirection(req, res){
 
     const linkKey = req.params;
+    console.log(linkKey);
 
     const link = await Links.findOne({
         where: {link_key: linkKey.linkkey}

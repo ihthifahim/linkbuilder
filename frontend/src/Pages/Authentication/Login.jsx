@@ -42,7 +42,7 @@ export default function Login() {
                 localStorage.setItem('locale', userTimezone);
                 getUserData();
                 setIsLoading( false )
-                navigate( '/manage/dashboard' );
+                navigate( '/manage/links' );
 
         } catch (error) {
             setIsLoading( false );

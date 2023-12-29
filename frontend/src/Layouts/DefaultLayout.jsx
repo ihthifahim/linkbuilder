@@ -7,8 +7,8 @@ export default function DefaultLayout(){
 
     return(
         <>
-            <div className="h-screen text-gray-700 ">
-                <div className="sticky top-0 bg-white px-5 md:px-5 lg:px-5 xl:px-1">
+            <div className="h-auto text-gray-700 ">
+                <div className="sticky top-0 bg-white px-5 md:px-5 lg:px-5 xl:px-1 z-20">
                     <Header/>
                 </div>
 
