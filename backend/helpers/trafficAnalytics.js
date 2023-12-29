@@ -16,16 +16,16 @@ async function lastHourData(linkKey, timezone) {
     let startTime, interval;
 
     try{
-        startTime = DateTime.fromJSDate(now.setZone(timezone).minus({ hours: 1 }).toJSDate());
-        const endTime = DateTime.fromJSDate(now.setZone(timezone).toJSDate());
+        startTime = moment(now).subtract(24, 'hours').toDate();
+        const endTime = moment().toDate();
         interval = 'minutes';
 
         const intervals = [];
         for (let i = 0; i < 30; i++) {
-            const intervalStart = startTime.plus({ minutes: i * 2 });
-            const intervalEnd = intervalStart.plus({ minutes: 2 });
-            const intervalName = `${intervalStart.toFormat('h:mm a')} - ${intervalEnd.toFormat('h:mm a')}`;
-            intervals.push({ start: intervalStart.toJSDate(), end: intervalEnd.toJSDate(), name: intervalName });
+            const intervalStart = moment(startTime).add(i * 2, interval).toDate();
+            const intervalEnd = moment(intervalStart).add(2, interval).toDate();
+            const intervalName = `${moment(intervalStart).format('h:mm A')} - ${moment(intervalEnd).format('h:mm A')}`;
+            intervals.push({ start: intervalStart, end: intervalEnd, name: intervalName });
         }
         
         const clicksData = await Promise.all(
@@ -84,7 +84,8 @@ async function lastHourData(linkKey, timezone) {
         }));
 
         
-        return {clicksData, countryData, totalClicks};
+        return {clicksData, countryData, totalClicks, linkKey};
+        
 
     } catch(error){
         console.log(error)

@@ -57,6 +57,7 @@ export default function LinkView(){
       try{
         const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
         setClickGraph(response.data.data.clicksData)
+        console.log(response.data.data)
         setCountryData(response.data.data.countryData);
         
         const formattedTotalClicks = response.data.data.totalClicks.totalClicks.toLocaleString();
@@ -75,6 +76,7 @@ export default function LinkView(){
       setLoadingData(true)
       const option = e.target.value
       const response = await axiosInstance.get(`link/analytics/${linkkey}/${option}`)
+      console.log(response.data.data)
       setClickGraph(response.data.data.clicksData);
       setCountryData(response.data.data.countryData);
       
