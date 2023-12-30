@@ -5,6 +5,8 @@ import LazySpinner from "../../Components/LazySpinner";
 
 import { Card, BarChart } from "@tremor/react";
 import CountryBarList from './Links/Analytics/CountryBarList';
+import RefererBarList from './Links/Analytics/RefererBarList';
+import DeviceBarList from './Links/Analytics/DeviceBarList';
 
 export default function LinkView(){
     const {linkkey} = useParams();
@@ -17,6 +19,8 @@ export default function LinkView(){
     const [clickGraph, setClickGraph] = useState([]);
     const [countryData, setCountryData] = useState([]);
     const [totalClicks, setTotalClicks] = useState(0);
+    const [referrerData, setReferrerData] = useState([]);
+    const [deviceData, setDeviceData] = useState([])
 
     const valueFormatter = (number) => `${new Intl.NumberFormat("us").format(number).toString()}`;
 
@@ -57,8 +61,9 @@ export default function LinkView(){
       try{
         const response = await axiosInstance.get(`link/analytics/${linkkey}/lasthour`)
         setClickGraph(response.data.data.clicksData)
-        console.log(response.data.data)
         setCountryData(response.data.data.countryData);
+        setReferrerData(response.data.data.refererData);
+        setDeviceData(response.data.data.deviceData);
         
         const formattedTotalClicks = response.data.data.totalClicks.totalClicks.toLocaleString();
         setTotalClicks(formattedTotalClicks);
@@ -76,9 +81,11 @@ export default function LinkView(){
       setLoadingData(true)
       const option = e.target.value
       const response = await axiosInstance.get(`link/analytics/${linkkey}/${option}`)
-      console.log(response.data.data)
+
       setClickGraph(response.data.data.clicksData);
       setCountryData(response.data.data.countryData);
+      setReferrerData(response.data.data.refererData);
+      setDeviceData(response.data.data.deviceData);
       
       const formattedTotalClicks = response.data.data.totalClicks.totalClicks.toLocaleString();
       setTotalClicks(formattedTotalClicks);
@@ -110,7 +117,7 @@ export default function LinkView(){
                         <h2 className='font-bold text-3xl'>{totalClicks}</h2>
                         <p className='text-sm'>Total Clicks</p>
                       </div>
-                        {loadingData ? <div className='h-72 flex justify-center items-center'>Loading...</div> : (
+                        {loadingData ? <div className='h-72 flex justify-center items-center'><LazySpinner /></div> : (
                         <BarChart
                             className="mt-6"
                             data={clickGraph}
@@ -124,8 +131,11 @@ export default function LinkView(){
                         )}
                     </Card>
 
-                    <div className='grid grid-cols-2 gap-6 mt-6'>
-                      <CountryBarList countryData={countryData} />
+                    <div className='grid grid-cols-1 md:grid-cols-2  gap-6 mt-6'>
+                      <CountryBarList countryData={countryData} loadingData={loadingData} />
+                      <RefererBarList referrerData={referrerData} loadingData={loadingData} />
+                      <DeviceBarList deviceData={deviceData} loadingData={loadingData} />
+                      
                     </div>
 
                     
