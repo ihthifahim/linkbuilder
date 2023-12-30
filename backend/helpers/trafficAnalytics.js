@@ -3,28 +3,18 @@ const { Op } = require('sequelize');
 const moment = require('moment');
 const {DateTime} = require('luxon');
 
-const redis = require('redis');
-// const { promisify } = require('util');
 
 const sequelize = require('../config/sequelize');
-
-const Links = require('../db/models/Links');
 const linkTraffic = require('../db/models/LinkTraffic');
-
-const client = redis.createClient(6379);
-
-
 
 
 async function lastHourData(linkKey, timezone) {
     const linkId = linkKey;
     const now = DateTime.now().setZone(timezone);
-    
     let startTime, interval;
-    const redisKey = `lastHourData:${linkKey}`;
 
     try{
- 
+
         startTime = now.minus({ hours: 1 });
         const endTime = now;
         
@@ -88,18 +78,58 @@ async function lastHourData(linkKey, timezone) {
             ],
         });
 
+        const clicksByReferer = await linkTraffic.findAll({
+            attributes:[
+                [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder'), 'referrer'], // Replace null with 'null_placeholder'
+                [sequelize.fn('COUNT', '*'), 'refererCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
+                },
+            },
+            group: [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder')], // Group by the replaced value
+            order: [
+                [Sequelize.literal('refererCount DESC')],
+            ],
+        })
+
+        const clicksByDevice = await linkTraffic.findAll({
+            attributes: [
+                ['device_device', 'device'],
+                [sequelize.fn('COUNT', '*'), 'deviceCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
+                },
+            },
+            group: ['device_device'],
+            order: [
+                [Sequelize.literal('deviceCount DESC')],
+            ],
+        });
+
+        const deviceData = clicksByDevice.map(entry => ({
+            device: entry.get('device'),
+            count: entry.get('deviceCount'),
+        }));
+
+        const refererData = clicksByReferer.map(entry => ({
+            referer: entry.get('referrer') === '' ? 'direct' : entry.get('referrer'),
+            count: entry.get('refererCount')
+        }));
         const countryData = clicksByCountry.map(entry => ({
             country: entry.get('country'),
             count: entry.get('countryCount'),
         }));
 
-        
-        const result = {clicksData, countryData, totalClicks, linkKey};
-        // await client.set(redisKey, JSON.stringify(result));
-
+        const result = {clicksData, countryData, totalClicks, linkKey, refererData, deviceData};        
         return result;
-    
-
     } catch(error){
         console.log(error)
     } 
@@ -174,6 +204,53 @@ async function last24hours(linkKey, timezone){
             ],
         });
 
+        const clicksByReferer = await linkTraffic.findAll({
+            attributes:[
+                [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder'), 'referrer'], // Replace null with 'null_placeholder'
+                [sequelize.fn('COUNT', '*'), 'refererCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
+                },
+            },
+            group: [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder')], // Group by the replaced value
+            order: [
+                [Sequelize.literal('refererCount DESC')],
+            ],
+        })
+
+        const clicksByDevice = await linkTraffic.findAll({
+            attributes: [
+                ['device_device', 'device'],
+                [sequelize.fn('COUNT', '*'), 'deviceCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
+                },
+            },
+            group: ['device_device'],
+            order: [
+                [Sequelize.literal('deviceCount DESC')],
+            ],
+        });
+
+        const deviceData = clicksByDevice.map(entry => ({
+            device: entry.get('device'),
+            count: entry.get('deviceCount'),
+        }));
+
+
+        const refererData = clicksByReferer.map(entry => ({
+            referer: entry.get('referrer') === '' ? 'direct' : entry.get('referrer'),
+            count: entry.get('refererCount')
+        }));
+
         const countryData = clicksByCountry.map(entry => ({
             country: entry.get('country'),
             count: entry.get('countryCount'),
@@ -181,7 +258,7 @@ async function last24hours(linkKey, timezone){
 
         
 
-        return {clicksData, countryData, totalClicks};
+        return {clicksData, countryData, totalClicks, refererData, deviceData};
 
     } catch(error){
         console.log(error)
@@ -251,6 +328,34 @@ async function allTimeData(linkKey, timezone) {
             ],
         });
 
+        const clicksByDevice = await linkTraffic.findAll({
+            attributes: [
+                ['device_device', 'device'],
+                [sequelize.fn('COUNT', '*'), 'deviceCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+            },
+            group: ['device_device'],
+            order:[
+                [sequelize.literal('deviceCount DESC')],
+            ],
+        });
+
+        const clicksByReferer = await linkTraffic.findAll({
+            attributes:[
+                [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder'), 'referrer'], // Replace null with 'null_placeholder'
+                [sequelize.fn('COUNT', '*'), 'refererCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+            },
+            group: [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder')], // Group by the replaced value
+            order: [
+                [Sequelize.literal('refererCount DESC')],
+            ],
+        })        
+
         const totalClicks = await linkTraffic.findOne({
             attributes:[
                 'linkKey',
@@ -262,13 +367,24 @@ async function allTimeData(linkKey, timezone) {
             raw: true,
         })
 
+        const refererData = clicksByReferer.map(entry => ({
+            referer: entry.get('referrer') === '' ? 'direct' : entry.get('referrer'),
+            count: entry.get('refererCount')
+        }));
+
+
         const countryData = clicksByCountry.map(entry => ({
             country: entry.get('country'),
             count: entry.get('countryCount'),
         }));
+
+        const deviceData = clicksByDevice.map(entry => ({
+            device: entry.get('device'),
+            count: entry.get('deviceCount'),
+        }));
         
 
-        return {clicksData, countryData, totalClicks};
+        return {clicksData, countryData, totalClicks, refererData, deviceData};
 
 
     } catch (error) {
@@ -364,12 +480,59 @@ async function last30Days(linkKey, timezone) {
             raw: true,
         });
 
+        const clicksByReferer = await linkTraffic.findAll({
+            attributes:[
+                [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder'), 'referrer'], // Replace null with 'null_placeholder'
+                [sequelize.fn('COUNT', '*'), 'refererCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
+                },
+            },
+            group: [sequelize.fn('COALESCE', sequelize.col('referrer'), 'null_placeholder')], // Group by the replaced value
+            order: [
+                [Sequelize.literal('refererCount DESC')],
+            ],
+        })
+
+        const clicksByDevice = await linkTraffic.findAll({
+            attributes: [
+                ['device_device', 'device'],
+                [sequelize.fn('COUNT', '*'), 'deviceCount'],
+            ],
+            where: {
+                linkKey: linkKey,
+                createdAt: {
+                    [Op.gte]: startTime.toJSDate(),
+                    [Op.lt]: endTime.toJSDate(),
+                },
+            },
+            group: ['device_device'],
+            order: [
+                [Sequelize.literal('deviceCount DESC')],
+            ],
+        });
+
+        const deviceData = clicksByDevice.map(entry => ({
+            device: entry.get('device'),
+            count: entry.get('deviceCount'),
+        }));
+
+        const refererData = clicksByReferer.map(entry => ({
+            referer: entry.get('referrer') === '' ? 'direct' : entry.get('referrer'),
+            count: entry.get('refererCount')
+        }));
+
+
         const countryData = clicksByCountry.map(entry => ({
             country: entry.get('country'),
             count: entry.get('countryCount'),
         }));
 
-        return { clicksData, countryData, totalClicks };
+        return { clicksData, countryData, totalClicks, refererData, deviceData };
 
     } catch (error) {
         console.error(error);
