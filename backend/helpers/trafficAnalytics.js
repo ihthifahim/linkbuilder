@@ -2,20 +2,29 @@ const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const moment = require('moment');
 const {DateTime} = require('luxon');
-const axios = require('axios');
+
+const redis = require('redis');
+// const { promisify } = require('util');
 
 const sequelize = require('../config/sequelize');
 
 const Links = require('../db/models/Links');
 const linkTraffic = require('../db/models/LinkTraffic');
 
+const client = redis.createClient(6379);
+
+
+
+
 async function lastHourData(linkKey, timezone) {
     const linkId = linkKey;
     const now = DateTime.now().setZone(timezone);
     
     let startTime, interval;
+    const redisKey = `lastHourData:${linkKey}`;
 
     try{
+ 
         startTime = now.minus({ hours: 1 });
         const endTime = now;
         
@@ -85,12 +94,16 @@ async function lastHourData(linkKey, timezone) {
         }));
 
         
-        return {clicksData, countryData, totalClicks, linkKey};
-        
+        const result = {clicksData, countryData, totalClicks, linkKey};
+        // await client.set(redisKey, JSON.stringify(result));
+
+        return result;
+    
 
     } catch(error){
         console.log(error)
-    }
+    } 
+  
 }
 
 
