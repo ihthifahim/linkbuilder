@@ -11,7 +11,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'Gumly.co - Zappy link with superhero chews',
   description: 'Introducing a link-chew-nology management tool for a chewrific marketing team!',
-  image: '/previewimage.png'
+  openGraph: {
+    images: '/previewimage.png'
+  }
 }
 
 export default function RootLayout({ children }) {

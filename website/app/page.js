@@ -9,16 +9,6 @@ export default function Home() {
 
   return (
     <>
-    <Head>
-        <meta property="og:url" content="https://gumly.co/" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="Introducing a link-chew-nology management tool for a chewrific marketing team!" />
-        <meta
-          property="og:description"
-          content="Introducing a link-chew-nology management tool for a chewrific marketing team!"
-        />
-        <meta property="og:image" content="https://gumly.co/previewimage.png" />
-    </Head>
 
     <main className="overflow-x-hidden ">
       <section className='relative z-10 py-20 text-center'>
