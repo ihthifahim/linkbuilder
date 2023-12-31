@@ -39,7 +39,7 @@ export default function Header(){
         <>
             <div className="flex justify-between container mx-auto py-5 mb-5">
                 <div className="">
-                    <img src="/assets/images/logonew.png" className="w-20" />
+                    <Link to="/manage/links"><img src="/assets/images/logonew.png" className="w-20" /></Link>
                 </div>
                 <div className="flex">
                     <div className=""></div>
@@ -71,13 +71,6 @@ export default function Header(){
             </div>
             <div className="border-b border-gray-200 px-5">
                 <div className="container mx-auto">
-                    {/*<div className="sm:hidden">*/}
-                    {/*    <label className="sr-only">Tab</label>*/}
-                    {/*    <select id="Tab" className="w-full rounded-md border-gray-200">*/}
-                    {/*        /!*<option>Settings</option>*!/*/}
-                    {/*    </select>*/}
-                    {/*</div>*/}
-
                     <div className="">
                         <div className="">
                             <nav className="-mb-px flex gap-6" aria-label="Tabs">

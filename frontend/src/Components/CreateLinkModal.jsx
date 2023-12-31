@@ -46,7 +46,7 @@ export default function CreateLinkModal({createLinkModal, linkSaved}){
 
     const fetchLinkPreview = async () => {
         generateLinkKey();
-        console.log(destinationURL)
+        
 
         try{
             const formData = {
@@ -99,14 +99,12 @@ export default function CreateLinkModal({createLinkModal, linkSaved}){
     const appendURLwithUTM = (key, value) => {
         setUtmTags((prevTags) => {
             const existingTagIndex = prevTags.findIndex((tag) => tag.key === key);
-
+            console.log(prevTags)
             if (existingTagIndex !== -1) {
-                // If the tag already exists, update its value
                 const updatedTags = [...prevTags];
                 updatedTags[existingTagIndex].value = value;
                 return updatedTags;
             } else {
-                // If the tag doesn't exist, add a new one
                 return [...prevTags, { key, value }];
             }
         });
@@ -259,14 +257,6 @@ export default function CreateLinkModal({createLinkModal, linkSaved}){
 
 
                             </div>
-
-
-
-
-
-
-
-
 
                             <div className="flex justify-between mt-5">
                                 <form onSubmit={handleSubmit}>

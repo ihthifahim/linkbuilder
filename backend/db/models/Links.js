@@ -91,6 +91,11 @@ const Links = sequelize.define('links', {
     ],
 }, {
     tableName: 'links'
+}, {
+    defaultScope: {
+        attributes: { exclude: ['updatedAt'] },
+        returning: true,
+      },
 });
 
 User.hasMany(Links, {

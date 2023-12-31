@@ -121,20 +121,76 @@ async function saveLink(req, res){
     }
 }
 
-
-
-async function getAllLinks(req, res){
+async function updateLink(req, res){
     try{
-        const links = await Links.findAll({
-            where: {userId: req.user.userId},
-            order: [['createdAt', 'DESC']]
+
+        const {link_key, utm_source, utm_medium, utm_campaign, utm_term, utm_content, url, 
+            page_title, page_description, page_image, page_favicon} = req.body;
+        
+
+        const condition = {
+            link_key
+        }
+
+        const newValues = {
+            utm_source, 
+            utm_medium,
+            utm_campaign,
+            utm_term,
+            utm_content,
+            destinationURL: url,
+            page_title,
+            page_description,
+            page_image,
+            page_favicon
+        }
+
+        await Links.update(newValues, {
+            where: condition
+        }).then((result) => {
+            res.status(200).json({message: 'updated'})
+        }).catch((error) => {
+            console.log(error)
+            res.status(500).json({error})
         })
-        res.status(200).json(links);
+
     } catch(error){
+        console.log(error)
+    }
+}
+
+
+
+async function getAllLinks(req, res) {
+    try {
+        const { page = 1, pageSize = 5, sort = 'CreatedAt' } = req.query; 
+
+        const offset = (page - 1) * parseInt(pageSize);
+
+        let orderBy = [];
+        if(sort === 'CreatedAt'){
+            orderBy = ['createdAt', 'DESC'];
+        } else if(sort === 'TotalClicks'){
+            orderBy = ['total_clicks', 'DESC'];
+        } else {
+            orderBy = ['last_click_date', 'DESC'];
+        }
+        
+        const links = await Links.findAndCountAll({
+            where: { userId: req.user.userId },
+            order: [orderBy],
+            limit: parseInt(pageSize), 
+            offset: offset
+        });
+
+        
+        res.status(200).json({links, pageCount : Math.ceil(links.count / parseInt(pageSize, 10)),});
+    } catch (error) {
         await ErrorLog.create({
             errorMessage: error.message,
         });
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.log(error);
+        res.status(500).json({ error });
     }
 }
 
@@ -211,7 +267,6 @@ async function getAnalytics(req, res){
 async function deleteLink(req, res){
     const linkKey = req.params.linkkey;
     deleteLinkHelper(linkKey).then((result) => {
-        console.log(result);
         res.status(200).json({ message: result});
     }).catch((error) => {
         console.error('error in deleting link', error);
@@ -220,4 +275,4 @@ async function deleteLink(req, res){
 
 
 
-module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome, getAnalytics, deleteLink}
+module.exports = {fetchLink, linkKey, saveLink, getAllLinks, getLink, saveLinkHome, getAnalytics, deleteLink, updateLink}
