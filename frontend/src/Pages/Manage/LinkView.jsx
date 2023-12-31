@@ -101,7 +101,7 @@ export default function LinkView(){
 
     return(
         <>
-            {editLink && <EditLink linkDetails={linkDetails} handleEdit={handleEdit} />}
+            {editLink && <EditLink linkDetails={linkDetails} handleEdit={handleEdit} getLink={getLink} />}
             {loadingPage ? (<LazySpinner />) : (
                 <div className='w-full md:w-3/4 xl:w-2/4 mx-auto'>
                     
