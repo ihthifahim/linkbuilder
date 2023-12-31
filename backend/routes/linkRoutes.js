@@ -13,6 +13,7 @@ router.get('/get-link-key' , LinkController.linkKey);
 
 
 router.post('/save', authMiddleware , LinkController.saveLink);
+router.post('/update', authMiddleware , LinkController.updateLink);
 router.get('/get-all-links' ,authMiddleware, LinkController.getAllLinks);
 router.get('/get-link', authMiddleware, LinkController.getLink);
 router.get('/delete-link/:linkkey', authMiddleware, LinkController.deleteLink);

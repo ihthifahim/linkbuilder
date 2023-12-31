@@ -271,7 +271,7 @@ async function allTimeData(linkKey, timezone) {
 
     try {
         // Find the earliest and latest timestamps in the LinkTraffic table
-        const { minTimestamp, maxTimestamp } = await linkTraffic.findOne({
+        let { minTimestamp, maxTimestamp } = await linkTraffic.findOne({
             attributes: [
                 [Sequelize.fn('MIN', Sequelize.col('createdAt')), 'minTimestamp'],
                 [Sequelize.fn('MAX', Sequelize.col('createdAt')), 'maxTimestamp'],
@@ -283,14 +283,14 @@ async function allTimeData(linkKey, timezone) {
         });
 
         if (!minTimestamp || !maxTimestamp) {
-            // Handle the case when there's no data available
-            return [];
+            minTimestamp = DateTime.now().setZone(timezone)
         }
 
         // Calculate the number of intervals based on the time range
         const intervalDuration = 1 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
 
         const intervals = [];
+        
         let intervalStart = new Date(minTimestamp);
         while (intervalStart.getTime() <= maxTimestamp) {
             const intervalEnd = new Date(intervalStart.getTime() + intervalDuration);
@@ -397,9 +397,12 @@ async function last30Days(linkKey, timezone) {
     const linkId = linkKey;
     const now = DateTime.now().setZone(timezone);
 
+    
+
     try {
         startTime = now.minus({ days: 30 });
         const endTime = now;
+        
 
         const maxTimestampResult = await linkTraffic.findOne({
             attributes: [
@@ -413,10 +416,11 @@ async function last30Days(linkKey, timezone) {
             },
             raw: true,
         });
+        
 
-        if (!maxTimestampResult.maxTimestamp) {
-            return [];
-        }
+        // if (!maxTimestampResult.maxTimestamp) {
+        //     return [];
+        // }
 
         
         const intervalCount = 15; 
@@ -444,6 +448,8 @@ async function last30Days(linkKey, timezone) {
                 return { name, Clicks: clicks };
             })
         );
+
+        
 
 
            
@@ -497,6 +503,7 @@ async function last30Days(linkKey, timezone) {
                 [Sequelize.literal('refererCount DESC')],
             ],
         })
+        
 
         const clicksByDevice = await linkTraffic.findAll({
             attributes: [
@@ -535,7 +542,7 @@ async function last30Days(linkKey, timezone) {
         return { clicksData, countryData, totalClicks, refererData, deviceData };
 
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 }
 

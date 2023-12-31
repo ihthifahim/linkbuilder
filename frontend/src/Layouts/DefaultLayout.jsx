@@ -15,6 +15,7 @@ export default function DefaultLayout(){
                 <div className="bg-gray-100 min-h-screen px-5 md:px-5 lg:px-5 xl:px-1">
                     <div className="container mx-auto py-5">
                         <Outlet/>
+                        <div className='container mx-auto py-10'></div>
                     </div>
                 </div>
             </div>

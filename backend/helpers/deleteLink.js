@@ -12,7 +12,7 @@ async function deleteLinkHelper(linkKey){
             where:{link_key: linkKey}
         });
 
-        return `Deleted ${deletedLinks} links`;
+        return `link deleted`;
     }catch(error){
         console.error('Error deleting link:', error);
         throw error;
