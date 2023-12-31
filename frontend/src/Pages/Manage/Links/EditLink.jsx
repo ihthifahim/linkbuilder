@@ -8,7 +8,7 @@ import { HiOutlineTrash } from "react-icons/hi2";
 
 import UtmCardEdit from './UtmCardEdit';
 
-export default function EditLink({linkDetails, handleEdit}){
+export default function EditLink({linkDetails, handleEdit, getLink}){
     const history = useNavigate();
     const [favicon, setFavicon] = useState(linkDetails.page_favicon)
     const [domain, setDomain] = useState(linkDetails.domain);
@@ -168,6 +168,7 @@ export default function EditLink({linkDetails, handleEdit}){
             const response = await submitForm();
             if(response.data.message === "updated"){
                 handleEdit();
+                getLink();
             }
 
             
