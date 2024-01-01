@@ -9,6 +9,7 @@ import Header from '@/app/components/header';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
+  metadataBase: new URL('https://gumly.co'),
   title: 'Gumly.co - Zappy link with superhero chews',
   description: 'Introducing a link-chew-nology management tool for a chewrific marketing team!',
   openGraph: {
