@@ -13,11 +13,11 @@ export default function Home() {
     <main className="overflow-x-hidden ">
       <section className='relative z-10 py-20 text-center'>
         <div className="absolute left-1/2 top-1/2 -z-10 h-[60px] w-[800px] -translate-x-1/2 -translate-y-1/2 opacity-40 blur-[70px] bg-purple-600"></div>
-        <div className='container mx-auto flex justify-center items-center h-[200px]'>
+        <div className='container mx-auto flex justify-center items-center h-[300px]'>
           <h1 className='inline-flex flex-col gap-1 transition font-display text-5xl font-bold leading-none md:text-[4rem] lg:text-[5rem] 
           bg-gradient-to-r from-20% bg-clip-text text-transparent from-purple-500 to-purple-200 mx-5 md:mx-0'>
             <span>Zappy link</span>
-            <span>with superhero chews</span>
+            <span>with a chew-nami impact</span>
             </h1>
             
         </div>

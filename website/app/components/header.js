@@ -15,7 +15,7 @@ export default function Header(){
 
     return(<>
 
-    <div className="container mx-auto py-5 mt-5">
+    <div className="container mx-auto py-5 mt-5 px-5">
         <div className='flex justify-between text-white items-center mx-5 md:mx-0'>
             <Link href="/">
                 <Image alt="Logo" src="/logo-light.png" width={100} height={20} />
@@ -23,20 +23,20 @@ export default function Header(){
             
             <nav className="hidden md:block">
                 <ul className="flex items-center gap-6 text-md">
-                <li>
+                {/* <li>
                     <Link className="text-gray-400 transition hover:text-gray-300" href="/"> Pricing </Link>
-                </li>
+                </li> */}
 
                 {/* <li>
                     <a className="text-gray-400 transition hover:text-gray-300" href="/"> Features </a>
                 </li> */}
 
                 <li>
-                    <a className="text-gray-400 transition hover:text-gray-300" href="/"> Campagin URL Buidler </a>
+                    <Link className="text-gray-400 transition hover:text-gray-300" href="/utm-builder"> Campagin URL Buidler </Link>
                 </li>
 
                 <li>
-                    <a className="text-gray-400 transition hover:text-gray-300" href="/"> Feedback </a>
+                    {/* <a className="text-gray-400 transition hover:text-gray-300" href="/"> Feedback </a> */}
                 </li>
                 </ul>
             </nav>
@@ -55,9 +55,9 @@ export default function Header(){
                 <div className='w-full absolute top-30 shadow-lg left-0 z-20'>
                     <div className='w-full px-10 py-10 bg-[#0D0613]'>
                         <ul className='block'>
-                            <li className='py-4'>Pricing</li>
-                            <li className='py-4'>Campaign URL Builder</li>
-                            <li className='py-4'>Feedback</li>
+                            {/* <li className='py-4'>Pricing</li> */}
+                            <Link href="/utm-builder"><li className='py-4'>Campaign URL Builder</li></Link>
+                            {/* <li className='py-4'>Feedback</li> */}
                         </ul>
 
                         <a href="https://app.gumly.co/login"><button className='mt-5 rounded-full w-full px-5 py-2 bg-purple-700 text-sm'>Login</button></a>
