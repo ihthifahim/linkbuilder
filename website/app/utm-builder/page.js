@@ -18,7 +18,7 @@ export default function UTMBuilder(){
         <div className="container mx-auto px-5 py-10">
             <UtmBuilderComponent />
 
-            <div className="mt-10 text-white w-2/6 mx-auto text-balance">
+            <div className="mt-10 text-white w-full md:w-5/6 lg:w-4/6 xl:w-3/6 mx-auto text-balance">
                 <p className="mt-5">Ever wondered how to make your online marketing efforts more effective? Well, the secret lies in understanding UTM parameters! 
                     UTM, short for Urchin Tracking Module, is a fancy term for codes you add to your web links. These codes help track how well 
                     your online campaigns are doing in Google Analytics, giving you loads of useful info. In this article, we'll break down what 
