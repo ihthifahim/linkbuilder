@@ -42,9 +42,15 @@ export default function UtmBuilderComponent() {
     };
 
     const handleCopyURL = () => {
-        if(textareaRef.current){
-            textareaRef.current.select();
-            document.execCommand('copy');
+        if (textareaRef.current) {
+            const urlToCopy = textareaRef.current.value;
+            navigator.clipboard.writeText(urlToCopy)
+            .then(() => {
+                
+            })
+            .catch((err) => {
+                console.error('Unable to copy URL to clipboard', err);
+            });
         }
     }
 
