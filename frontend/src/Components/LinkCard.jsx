@@ -21,6 +21,7 @@ export default function LinkCard({link, getAllLinks}){
     }, [link.createdAt]);
 
     useEffect(() => {
+        
         const handleClickOutside = (event) => {
             if (linkCardMenuRef.current && !linkCardMenuRef.current.contains(event.target)) {
                 closeLinkMenu();
@@ -114,6 +115,9 @@ export default function LinkCard({link, getAllLinks}){
     }
 
     const convertTimeZone = (utcTime) => {
+        if(utcTime === null){
+            return "N/A";
+        }
         const userTimeZone = localStorage.getItem('locale') || 'UTC';
         return new Date(utcTime).toLocaleString('en-us', { timeZone: userTimeZone});
       }
