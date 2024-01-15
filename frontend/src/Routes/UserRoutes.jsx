@@ -22,7 +22,7 @@ export default function UserRoutes({user}){
 
                     {/*Link Routes*/}
                     <Route path="links" element={<PrivateRoute><Links /></PrivateRoute>} />
-                    <Route path="links/:linkkey" element={<LinkView />}/>
+                    <Route path="links/:linkkey" element={<PrivateRoute><LinkView /></PrivateRoute>}/>
 
 
                 </Route>
