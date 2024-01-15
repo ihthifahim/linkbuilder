@@ -8,8 +8,6 @@ export default function PrivateRoute({ children }) {
 
     const authToken = localStorage.getItem('token');
 
-
-
     if (!authToken) {
         return <Navigate to="/login" />;
     }
