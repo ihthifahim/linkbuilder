@@ -53,16 +53,22 @@ async function getLinkHeaders(req, res, next){
         });
 
         if (!existingRecord) {
-            await linkTraffic.create({
-                linkKey: linkKey.linkkey,
-                location_country: req.linkDetails.country,
-                location_city: req.linkDetails.city,
-                device_device: req.linkDetails.device,
-                device_browser: req.linkDetails.browser,
-                device_os: req.linkDetails.os,
-                referrer: req.linkDetails.referrer,
-                ip: ip
-            });
+            const skipbots = ['facebookexternalhit', 'unknown', 'Twitterbot'];
+            if(skipbots.includes(req.linkDetails.browser)){
+                return next();
+            } else {
+                await linkTraffic.create({
+                    linkKey: linkKey.linkkey,
+                    location_country: req.linkDetails.country,
+                    location_city: req.linkDetails.city,
+                    device_device: req.linkDetails.device,
+                    device_browser: req.linkDetails.browser,
+                    device_os: req.linkDetails.os,
+                    referrer: req.linkDetails.referrer,
+                    ip: ip
+                });
+            }
+            
         }
 
     } catch (error) {
