@@ -10,15 +10,5 @@ const axiosInstance = axios.create({
     }
 })
 
-axiosInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-    const userTimezone = localStorage.getItem('locale') || 'UTC';
-    if (token) {
-        config.headers.Authorization = `${token}`;
-    }
-    config.headers['usertimezone'] = userTimezone;
-
-    return config;
-});
 
 export default axiosInstance;
