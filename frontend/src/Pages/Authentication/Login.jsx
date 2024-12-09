@@ -27,7 +27,7 @@ export default function Login() {
         e.preventDefault()
 
         setLoginError("");
-        setIsLoading( true )
+        setIsLoading(true)
 
         const formData = {
             email,
@@ -55,6 +55,8 @@ export default function Login() {
                 }
             }
 
+        } finally {
+            setIsLoading(false)
         }
     }
 

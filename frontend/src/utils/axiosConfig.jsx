@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = process.env.NODE_ENV === 'production' ? 'https://gum.lk/api/' : 'http://localhost:5050/api/';
+const baseURL = process.env.REACT_APP_API_URL
 
 
 const axiosInstance = axios.create({
