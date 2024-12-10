@@ -78,7 +78,6 @@ export default function Login() {
                         </div>
                     )}
 
-
                     <div className="flex flex-col space-y-2 text-center">
                         <h2 className="text-2xl md:text-xl font-bold mt-5">Hey welcome back! 👋</h2>
                     </div>
