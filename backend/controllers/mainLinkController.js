@@ -1,9 +1,14 @@
 const Links = require('../db/models/Links');
 
+const {redisCon} = require('../config/redisClient');
 
 async function redirection(req, res){
 
     const linkKey = req.params;
+
+    // let cachecLinks = ""
+
+    // const checkCache = await redisCon.get('links');
 
     const link = await Links.findOne({
         where: {link_key: linkKey.linkkey}

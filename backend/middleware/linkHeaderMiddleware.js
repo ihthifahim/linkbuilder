@@ -11,7 +11,6 @@ const extractDomainFromReferer = require('../helpers/extractDomain');
 
 async function getLinkHeaders(req, res, next){
     
-
     const skipUrls = ['/favicon.ico', '/.git', '/docker-compose.yml', '/.env'];
 
     if (skipUrls.includes(req.url)) {
@@ -22,6 +21,7 @@ async function getLinkHeaders(req, res, next){
     const userAgent = useragent.parse(req.headers['user-agent']);
 
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log(ip);
     const geo = geoip.lookup(ip);
 
 
@@ -77,7 +77,7 @@ async function getLinkHeaders(req, res, next){
             errorMessage: error.message,
         });
     }
-
+    
     next();
 }
 

@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-    origin: ['https://app.gumly.co'],
+    origin: ['https://app.gumly.co', 'http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 200
@@ -35,7 +35,6 @@ app.get('/', (req, res) => {
 app.use('/api', mainRoutes);
 
 
-
 const port = process.env.PORT;
 sequelize.sync({ force: false }).then(() => {
     console.log('Database synced successfully');
@@ -43,12 +42,3 @@ sequelize.sync({ force: false }).then(() => {
         console.log(`Server is running on http://localhost:${port}`);
     });
 });
-
-
-// LinkTraffic.sync()
-//     .then(() => {
-//         console.log('Links table synced successfully');
-//     })
-//     .catch((error) => {
-//         console.error('Error syncing Links table:', error);
-//     });
