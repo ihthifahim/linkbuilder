@@ -15,7 +15,6 @@ const predefinedLinkKeys = [
     'link-preview',
     'ihthishaam',
     'ihthifahim',
-    'ihthi',
     'maria',
     'fronti',
     'octagen',
