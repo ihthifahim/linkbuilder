@@ -20,8 +20,9 @@ async function getLinkHeaders(req, res, next){
     const linkKey = req.params;
     const userAgent = useragent.parse(req.headers['user-agent']);
 
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const ip = req.headers['x-forwarded-for'];
     console.log(ip);
+    console.log(req.headers['cf-connecting-ip']);
     const geo = geoip.lookup(ip);
 
 
